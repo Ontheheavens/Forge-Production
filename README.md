@@ -37,5 +37,3 @@ Development goals:
 This is not intended to be a potentially big project with undefined development cycle. 
 The main goal here is to create a streamlined, refined replacement of such mods as "Supply Forging", "Fuel Siphoning", and forges of "Nijigen Extend", 
 with an implementation keeping to vanilla style, lore and feeling.
-
-Any other ideas like new ships, other hullmods and so on, will have to go into new projects.
