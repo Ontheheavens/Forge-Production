@@ -12,7 +12,7 @@ Files and features deemed unnecessary for the reworked idea were removed. Here i
 - Criminal Industries - Colony buildings that bring in money directly, but can negatively impact your colony in other ways.
 - Agreus-Caparice Tech Cooperative - Adds a market in Agreus (Vanilla) and Caparice (YRXP), A&C Co-op, where you can buy the gadgets offered by this mod.
 
-Removed was everything except Forge Ship Hullmods. Furthermore, hullmod classes were partially modified, an ability class and mod plugin file included.
+Removed was everything except Forge Ship Hullmods. Furthermore, hullmod classes were partially modified, an ability class and mod plugin file were added.
 
 Currently project includes:
 
