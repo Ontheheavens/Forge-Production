@@ -5,6 +5,16 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/graphics" />
+      <excludeFolder url="file://$MODULE_DIR$/data/world" />
+      <excludeFolder url="file://$MODULE_DIR$/data/hullmods" />
+      <excludeFolder url="file://$MODULE_DIR$/data/config" />
+      <excludeFolder url="file://$MODULE_DIR$/jars" />
+      <excludePattern pattern=".gitignore" />
+      <excludePattern pattern="forge_production.iml" />
+      <excludePattern pattern="README.md" />
+      <excludePattern pattern="abilities.csv" />
+      <excludePattern pattern="mod_info.json" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

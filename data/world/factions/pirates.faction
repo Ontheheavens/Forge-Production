@@ -1,0 +1,11 @@
+{
+    "knownHullMods":{
+        "hullMods":[
+			"yrex_FuelForge",
+            "yrex_RefineryForge",
+            "yrex_SuppliesForge",
+            "yrex_LobsterPot",
+            "yrex_ForgeShip"
+        ],
+    },
+},

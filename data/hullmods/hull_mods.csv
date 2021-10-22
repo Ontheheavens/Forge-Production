@@ -1,0 +1,48 @@
+name,id,tier,rarity,tech/manufacturer,tags,uiTags,"base value",unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sprite
+"Antimatter Centrifuge",yrex_FuelForge,3,"0.2
+",Forge,special,Special,100000,FALSE,FALSE,FALSE,4,8,12,16,data.scripts.hullmods.yrex_FuelForge,"Emplaces a massive centrifuge at the heart of this ship's forge bay, allowing the production of antimatter from volatile chemicals. Freshly made antimatter is more energetic per volume and thus gives %s better fuel economy.
+
+Furthermore, this ship is able to autonomously convert volatiles into fuel. %s times a day, depending on this ship's size, it can:
+
+Convert %s Volatiles using %s Heavy Machinery into %s Fuel, up until the fleet's maximum fuel capacity.
+
+Heavy Machinery is not normally lost during the production process but a few can sometimes break down.
+
+Refining fuel tires out the crew and thus costs CR every day.","Reduces fuel use.",graphics/hullmods/yrex_centrifuge.png
+"Shipborne Smelter",yrex_RefineryForge,2,"0.9
+",Forge,special,Special,75000,FALSE,FALSE,FALSE,4,8,12,16,data.scripts.hullmods.yrex_RefineryForge,"Installs an omni-smelter in the ship's forge bay, allowing it to mass-produce replacement parts and other tools all within the hull. These facilities increase this ship's repair rate by %s.
+
+Furthermore, this ship is able to autonomously convert ore into refined materials. %s times a day, depending on this ship's size, it can:
+
+Refine %s Ore using %s Heavy Machinery into %s Metals.
+
+Refine %s Transplutonic Ore using %s Heavy Machinery into %s Transplutonics.
+
+Heavy Machinery is not normally lost during the refining process but a few can sometimes break down.
+
+Refining ore tires out the crew and thus costs some CR every day.","Quicker repair.",graphics/hullmods/yrex_smelter.png
+"Manufacturing Bay",yrex_SuppliesForge,3,0.2,Forge,special,Special,100000,FALSE,FALSE,FALSE,4,8,12,16,data.scripts.hullmods.yrex_SuppliesForge,"Onboard fabricators allow this ship to store extra munitions, increasing ammo stores of all weapon types by %s. Due to the availability of ammunition, weapon crews are able to fire with impunity, increasing the rate of fire of all weapons by %s.
+
+Furthermore, the ship is able to autonomously convert metals and transplutonics into supplies. %s times a day, depending on this ship's size, it can:
+
+Convert %s Metals and %s Transplutonics using %s Heavy Machinery into %s Supplies.
+
+Heavy Machinery is not normally lost during the production process but a few can sometimes break down.
+
+Producing supplies tires out the crew and thus costs some CR every day.","Increased rate of fire.",graphics/hullmods/yrex_manufacturing.png
+"Volturnian Aquarium",yrex_LobsterPot,2,"0.8
+",Forge,special,Special,80000,FALSE,FALSE,FALSE,4,8,12,16,data.scripts.hullmods.yrex_LobsterPot,"Installs a massive pressurized tank that simulates the depths of the Volturn sea floor. This provides a prime living space for Volturnian lobsters, allowing them to reproduce, given availability of food. The aquarium itself doubles as a recreation area, where crews can watch the lobsters in their natural environment and relax, thus increasing CR recovery rate by %s.
+
+Lobsters consume %s food per day. While lobsters are fed, they are able to reproduce and raise their young, eventually increasing their numbers.
+
+The tanks can breed up to %s lobsters per day, depending on ship size.","Quicker CR recovery.",graphics/hullmods/yrex_aquarium.png
+"Forge Bay",yrex_ForgeShip,1,"0.5
+",Forge,"req_spaceport, special","Special, Requires Dock",50000,FALSE,FALSE,FALSE,0,0,15,25,data.scripts.hullmods.yrex_ForgeShip,"Allows a cruiser or capital ship to accommodate %s common Forge Module within its hull.
+
+Can not be installed on a frigate or a destroyer.
+
+Some of the ship's cargo space is used to make room for all of the related equipment, causing maximum cargo capacity to decrease by  %s/%s, depending on hull size.","Can mount forges.",graphics/hullmods/yrex_forge.png
+#####,,,,,,,,,,,,,,,,,,
+"Linked Hull (YREX)",yrex_LinkedHull,,,,,,,,TRUE,TRUE,0,0,0,0,data.scripts.hullmods.yrex_LinkedHull,"Mirrors certain aspects between the parent and child hulls.",,graphics/hullmods/vast_bulk.png
+#####,,,,,,,,,,,,,,,,,,
+"HULLMOD CONFLICT",yrex_IncompatibleHullmodWarning,,,,,,,,TRUE,,0,0,0,0,data.scripts.hullmods.yrex_IncompatibleHullmodWarning,"%s, this hullmod cannot be installed on this ship. It conflicts with another previously installed hullmod.",,graphics/hullmods/yrex_incompatible.png

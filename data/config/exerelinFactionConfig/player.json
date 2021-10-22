@@ -1,0 +1,8 @@
+{
+    "startSpecialItems":[
+        [["modspec", "yrex_ForgeShip"]],
+        [["modspec", "yrex_FuelForge"]],
+        [["modspec", "yrex_RefineryForge"]],
+        [["modspec", "yrex_SuppliesForge"]]
+    ]
+}
