@@ -64,6 +64,7 @@ public class ForgeHullmodsListener implements EveryFrameScript {
                     return true;
                 }
             }
+            return false;
         }
         return false;
     }
