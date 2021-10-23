@@ -1,10 +1,9 @@
 {
-  "id":"yrex",
-	"name":"Nijigen Extend",
-	"author":"Created by creature.",	
-	"version":"0.2.0",
-	"description":"A collection of ideas that serve as supplements to Yuri Expedition and Arian Empire. Requires LazyLib, GraphicsLib, MagicLib.",
-	"gameVersion":"0.95a-RC8",
-	"jars":["jars/yrex.jar"],
-	"modPlugin":"data.plugins.FPPlugin",
+  "id":"forge_production",
+	"name":"Forge Production",
+	"author":"Ontheheavens",
+	"version":"0.0.1",
+	"description":"Hullmods that allow ships to produce commodities.",
+	"gameVersion":"0.95a",
+	"jars":["jars/forge_production.jar"],
 }
