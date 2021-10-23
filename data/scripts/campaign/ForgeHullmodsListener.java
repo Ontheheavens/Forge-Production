@@ -1,23 +1,21 @@
 package data.scripts.campaign;
 
-import java.util.Set;
-import java.util.HashSet;
-
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
-import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
-
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import data.scripts.abilities.ForgeProduction;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ForgeHullmodsListener implements EveryFrameScript {
 
     // Here: Declared constants
 
     public static final Set<String> ALL_FORGE_HULLMODS = new HashSet<>();
-    static
-    {
+
+    static {
         ALL_FORGE_HULLMODS.add("forge_refinery_module");
     }
 
@@ -32,41 +30,54 @@ public class ForgeHullmodsListener implements EveryFrameScript {
     }
 
     public void advance(float amount) {
-
-        ForgeProduction.setUseAllowedByListener(ForgeHullmodsListener.checkForgeShipsInPlayerFleet());
-
+        ForgeProduction.setUseAllowedByListener(hasForgeShips());
     }
 
     //Here: Custom methods
 
-    private static boolean checkForgeShipsInPlayerFleet() {
-
+    private boolean hasForgeShips() {
         CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
         if (playerFleet == null) {
             return false;
         }
 
         for (FleetMemberAPI member : playerFleet.getMembersWithFightersCopy()) {
-
-            // Forge Hullmods are only applicable to cruisers or capitals, so check only for them
-            if (member.getHullSpec().getHullSize() != ShipAPI.HullSize.CRUISER ||
-                member.getHullSpec().getHullSize() != ShipAPI.HullSize.CAPITAL_SHIP) {
+            if (!isValid(member)) {
                 continue;
             }
-
-            // Forge Hullmods are inactive on mothballed ships
-            if (member.isMothballed()) {
-                continue;
+            if (isForgeShip(member)) {
+                return true;
             }
-
-            for (String forgeHullmod : ALL_FORGE_HULLMODS) {
-                if (member.getVariant().getHullMods().contains(forgeHullmod)) {
-                    return true;
-                }
-            }
-            return false;
         }
         return false;
     }
 
+    private boolean isValid(FleetMemberAPI member) {
+        // Forge Hullmods are only applicable to cruisers or capitals, so check only for them
+        if (
+            !isSize(member, ShipAPI.HullSize.CRUISER) ||
+            !isSize(member, ShipAPI.HullSize.CAPITAL_SHIP)
+        ) {
+            return false;
+        }
+
+        // Forge Hullmods are inactive on mothballed ships
+        if (member.isMothballed()) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isForgeShip(FleetMemberAPI member) {
+        for (String forgeHullmod : ALL_FORGE_HULLMODS) {
+            if (member.getVariant().getHullMods().contains(forgeHullmod)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isSize(FleetMemberAPI member, String hullSize) {
+        return member.getHullSpec().getHullSize().equals(hullSize);
+    }
 }
