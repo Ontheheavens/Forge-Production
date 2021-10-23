@@ -22,8 +22,8 @@ public class ForgeProduction extends BaseToggleAbility {
                 getProgressFraction() > 0 && getProgressFraction() < 1 &&
                 getDeactivationDays() > 0) return false;
 
-        if (!ForgeHullmodsListener.checkForgeShipsInPlayerFleet())
-            return false;
+    //    if (!ForgeHullmodsListener.checkForgeShipsInPlayerFleet())
+    //        return false;
 
         return super.isUsable();
     }
