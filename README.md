@@ -47,10 +47,15 @@ All remaining files of source mod were removed, work started from scratch.
 Architecture draft:
 
  - Hullmod dummy (no code, as it does nothing) 
-       [Will probably only display info through tooltips]
+        [Will probably only display info through tooltips]
+        
  - Ability (when toggled will do something)  
-       [Will display info through tooltip and act as a toggle for conversion]
+        [Will display info through tooltip and act as a toggle for conversion]
+        
  - EveryFrameListener for deciding if ability is usable (check fleet status, and set ability property correctly, this property is used to determine if it is              activable)
-       [Done for now]
+        [Done for now]
+        
  - Further listeners that do actual conversion (TBD later). 
-       [Will also create a unified production message]
+        [Will also create a unified production message]
+        
+       
