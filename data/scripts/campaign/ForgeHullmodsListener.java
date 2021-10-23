@@ -10,9 +10,12 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 
+import data.scripts.abilities.ForgeProduction;
+
 public class ForgeHullmodsListener implements EveryFrameScript {
 
-    //This is how often we check for hullmods
+    // Here: Declared constants
+
     private final IntervalUtil checkForHullmodsTimer = new IntervalUtil(0.5f, 1f);
 
     public static final Set<String> ALL_FORGE_HULLMODS = new HashSet<>();
@@ -21,7 +24,7 @@ public class ForgeHullmodsListener implements EveryFrameScript {
         ALL_FORGE_HULLMODS.add("forge_refinery_module");
     }
 
-    public boolean setVariable()
+    // Here: Inherited methods
 
     public boolean isDone() {
         return false;
@@ -39,13 +42,15 @@ public class ForgeHullmodsListener implements EveryFrameScript {
 
             if (ForgeHullmodsListener.checkForgeShipsInPlayerFleet()) {
 
-                set global variable = 1;
+                ForgeProduction.setUseAllowedByListener(true);
 
             }
 
         }
 
     }
+
+    //Here: Custom methods
 
     private static boolean checkForgeShipsInPlayerFleet() {
 
@@ -54,14 +59,16 @@ public class ForgeHullmodsListener implements EveryFrameScript {
             return false;
         }
 
-        // Check later if there's more convenient way to .getMembers
-
         for (FleetMemberAPI member : playerFleet.getMembersWithFightersCopy()) {
 
-            // Forge Hullmods will be only applicable to cruisers or capitals, so check only for them
-
+            // Forge Hullmods are only applicable to cruisers or capitals, so check only for them
             if (member.getHullSpec().getHullSize() != ShipAPI.HullSize.CRUISER ||
                 member.getHullSpec().getHullSize() != ShipAPI.HullSize.CAPITAL_SHIP) {
+                continue;
+            }
+
+            // Forge Hullmods are inactive on mothballed ships
+            if (member.isMothballed()) {
                 continue;
             }
 
@@ -73,6 +80,5 @@ public class ForgeHullmodsListener implements EveryFrameScript {
         }
         return false;
     }
-
 
 }
