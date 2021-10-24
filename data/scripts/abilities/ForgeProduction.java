@@ -1,29 +1,123 @@
 package data.scripts.abilities;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Commodities;
+import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.impl.campaign.abilities.BaseToggleAbility;
+import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 
-import data.scripts.campaign.RefineryProductionListener;
+import org.lazywizard.lazylib.MathUtils;
 
 public class ForgeProduction extends BaseToggleAbility {
 
-    // Here: Declared constants
+    // Here: Declared constants for production
 
     private static boolean useAllowedByListener = false;
 
-    // Here: Inherited methods
+    private final boolean showNotification = Global.getSettings().getBoolean("forge_show_notification");
 
-    protected void activateImpl() {
+    private final float heavyMachineryCost = Global.getSettings().getFloat("forge_heavy_machinery_to_allow_refining");
 
-        RefineryProductionListener newRefineryProducer = new RefineryProductionListener();
+    private final float oreCost = Global.getSettings().getFloat("forge_ore_to_refine");
+    private final float metalProduced = Global.getSettings().getFloat("forge_metal_produced");
+
+    private final float transplutonicOreCost = Global.getSettings().getFloat("forge_transplutonic_ore_to_refine");
+    private final float transplutonicsProduced = Global.getSettings().getFloat("forge_transplutonics_produced");
+
+    private final float combatReadinessCost = Global.getSettings().getFloat("forge_combat_readiness_decay_when_producing");
+
+    private final IntervalUtil productionInterval = new IntervalUtil(0.9f,1.1f);
+
+    private static final Color METAL_COLOR = new Color(205, 205, 205, 255);
+    private static final Color WARNING_COLOR = new Color(255, 100, 100, 255);
+
+    // Here: Temporary variables
+
+    public static float totalDailyOreExpenditure = 0f;
+    public static float totalDailyMetalProduction = 0f;
+    public static float totalDailyMachineBreakage = 0f;
+
+    public static boolean hasBreakdownHappened = false;
+
+    // Here: Ship forging capacity factors
+
+    private static final Map<ShipAPI.HullSize, Integer> shipSizeEffect = new HashMap<>();
+    static {
+
+        shipSizeEffect.put(ShipAPI.HullSize.DEFAULT, 0);
+        shipSizeEffect.put(ShipAPI.HullSize.FRIGATE, 0);
+        shipSizeEffect.put(ShipAPI.HullSize.DESTROYER, 0);
+        shipSizeEffect.put(ShipAPI.HullSize.CRUISER, 4);
+        shipSizeEffect.put(ShipAPI.HullSize.CAPITAL_SHIP, 8);
 
     }
 
-    protected void applyEffect(float amount, float level) { }
+    // Here: Inherited methods
+
+    protected void activateImpl() { }
+
+    protected void applyEffect(float amount, float level) {
+
+        CampaignFleetAPI fleet = getFleet();
+
+        if (fleet == null) return;
+        if (!isActive()) return;
+
+        float days = Global.getSector().getClock().convertToDays(amount);
+
+        productionInterval.advance(days);
+
+        if (productionInterval.intervalElapsed()) {
+
+            float oreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.ORE);
+
+            if (oreAvailable > oreCost) {
+
+                refineOre();
+
+            }
+
+            if (showNotification) {
+
+                final String ores = String.valueOf((int) (totalDailyOreExpenditure));
+                final String metals = String.valueOf((int) (totalDailyMetalProduction));
+
+                final boolean breakdownReport = hasBreakdownHappened;
+                final String machineryBreakdowns = String.valueOf((int) (totalDailyMachineBreakage));
+
+                Global.getSector().getIntelManager().addIntel(new BaseIntelPlugin() {
+
+                    @Override
+                    public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
+
+                        String metalProductionLine = ores + " ores were refined into " + metals + " metals";
+                        String machineryBreakdownsLine = machineryBreakdowns + " heavy machinery broke down";
+
+                        Color highlightColor = Misc.getHighlightColor();
+
+                        info.addPara(metalProductionLine, 2, METAL_COLOR, highlightColor, ores, metals);
+
+                        if (breakdownReport)
+                            info.addPara(machineryBreakdownsLine, 2, WARNING_COLOR, highlightColor, machineryBreakdowns);
+
+                        // Jaghaimo: die, you served your purpose
+                        Global.getSector().getIntelManager().removeIntel(this);
+                    }
+                }
+                );
+            }
+        }
+    }
 
     protected void deactivateImpl() { cleanupImpl(); }
 
@@ -66,6 +160,75 @@ public class ForgeProduction extends BaseToggleAbility {
         useAllowedByListener = useAllowed;
     }
 
-    public boolean isForgingOn() { return turnedOn; }
+    private int getRefiningCapacity(CampaignFleetAPI fleet) {
+        int totalRefiningCapacity = 0;
+        for (FleetMemberAPI member : fleet.getFleetData().getMembersListCopy()) {
+            if ((member.getRepairTracker().isSuspendRepairs() || member.getRepairTracker().isMothballed()))
+                continue;
+            if (member.getVariant().hasHullMod("forge_refinery_module"))
+                totalRefiningCapacity += Math.round(shipSizeEffect.get(member.getVariant().getHullSize()) * member.getRepairTracker().getCR());
+        }
+        return totalRefiningCapacity;
+    }
+
+    private void applyRefiningCRMalus(CampaignFleetAPI fleet) {
+        for (FleetMemberAPI member : fleet.getFleetData().getMembersListCopy()) {
+            if ((member.getRepairTracker().isSuspendRepairs() || member.getRepairTracker().isMothballed()))
+                continue;
+            if (member.getVariant().hasHullMod("forge_refinery_module"))
+                member.getRepairTracker().applyCREvent(-combatReadinessCost, "Produced goods");
+        }
+    }
+
+    private void refineOre() {
+
+        CampaignFleetAPI fleet = getFleet();
+
+        float heavyMachineryAvailable = fleet.getCargo().getCommodityQuantity(Commodities.HEAVY_MACHINERY);
+        if (heavyMachineryAvailable <= heavyMachineryCost) return;
+
+        float heavyMachineryInRefining = heavyMachineryAvailable/heavyMachineryCost;
+        float oreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.ORE);
+
+        float RefiningCapacity = getRefiningCapacity(fleet);
+
+        if (oreAvailable > oreCost) {
+
+            float oreInRefining = oreAvailable/oreCost;
+
+            int refiningCycles = (int) (Math.min(RefiningCapacity, Math.min(heavyMachineryInRefining,oreInRefining)));
+
+            // Math.random returns number between 0 and 1. If returned is !< breakdownChance, expression is false and breakdown won't happen.
+            // So, 10% chance of breakdown.
+
+            float breakdownChance = 0.1f;
+            boolean willHeavyMachineryBreakdown = (Math.random()<breakdownChance);
+
+            // Reminder to expand on Breakdown mechanic later with Nanoforges.
+
+            int randomHeavyMachineryBreakdowns = MathUtils.getRandomNumberInRange(0, refiningCycles);
+
+            float dailyOreSpent = oreCost * refiningCycles;
+            float dailyMetalProduced = metalProduced * refiningCycles;
+            float dailyHeavyMachineryBroken = heavyMachineryInRefining * randomHeavyMachineryBreakdowns;
+
+            fleet.getCargo().removeCommodity(Commodities.ORE, dailyOreSpent);
+            fleet.getCargo().addCommodity(Commodities.METALS, dailyMetalProduced);
+            if(willHeavyMachineryBreakdown)
+                fleet.getCargo().removeCommodity(Commodities.HEAVY_MACHINERY, dailyHeavyMachineryBroken);
+
+            float baseCommodityQuantity = 0f;
+
+            totalDailyOreExpenditure = baseCommodityQuantity + dailyOreSpent;
+            totalDailyMetalProduction = baseCommodityQuantity + dailyMetalProduced;
+            totalDailyMachineBreakage = baseCommodityQuantity + dailyHeavyMachineryBroken;
+
+            hasBreakdownHappened = willHeavyMachineryBreakdown;
+
+        }
+
+        applyRefiningCRMalus(fleet);
+
+    }
 
 }
