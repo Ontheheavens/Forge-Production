@@ -1,13 +1,15 @@
 package data.scripts.campaign;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+
 import data.scripts.abilities.ForgeProduction;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ForgeHullmodsListener implements EveryFrameScript {
 
@@ -55,8 +57,8 @@ public class ForgeHullmodsListener implements EveryFrameScript {
     private boolean isValid(FleetMemberAPI member) {
         // Forge Hullmods are only applicable to cruisers or capitals, so check only for them
         if (
-            !isSize(member, ShipAPI.HullSize.CRUISER) ||
-            !isSize(member, ShipAPI.HullSize.CAPITAL_SHIP)
+            isNotSize(member, ShipAPI.HullSize.CRUISER) ||
+            isNotSize(member, ShipAPI.HullSize.CAPITAL_SHIP)
         ) {
             return false;
         }
@@ -77,7 +79,7 @@ public class ForgeHullmodsListener implements EveryFrameScript {
         return false;
     }
 
-    private boolean isSize(FleetMemberAPI member, String hullSize) {
-        return member.getHullSpec().getHullSize().equals(hullSize);
+    private boolean isNotSize(FleetMemberAPI member, ShipAPI.HullSize hullSize) {
+        return !member.getHullSpec().getHullSize().equals(hullSize);
     }
 }
