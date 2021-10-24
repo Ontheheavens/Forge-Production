@@ -7,16 +7,21 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.impl.campaign.abilities.BaseToggleAbility;
 import com.fs.starfarer.api.util.Misc;
 
+import data.scripts.campaign.RefineryProductionListener;
+
 public class ForgeProduction extends BaseToggleAbility {
 
     // Here: Declared constants
-
 
     private static boolean useAllowedByListener = false;
 
     // Here: Inherited methods
 
-    protected void activateImpl() { }
+    protected void activateImpl() {
+
+        RefineryProductionListener newRefineryProducer = new RefineryProductionListener();
+
+    }
 
     protected void applyEffect(float amount, float level) { }
 
@@ -60,5 +65,7 @@ public class ForgeProduction extends BaseToggleAbility {
     public static void setUseAllowedByListener (boolean useAllowed) {
         useAllowedByListener = useAllowed;
     }
+
+    public boolean isForgingOn() { return turnedOn; }
 
 }

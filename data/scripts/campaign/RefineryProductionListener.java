@@ -30,7 +30,6 @@ public class RefineryProductionListener implements EveryFrameScript {
 
         if (productionTimer.intervalElapsed()) {
 
-
             CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
 
             FleetMemberAPI member = (FleetMemberAPI) playerFleet.getFleetData().getMembersListCopy();
