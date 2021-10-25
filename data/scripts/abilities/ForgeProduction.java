@@ -43,11 +43,14 @@ public class ForgeProduction extends BaseToggleAbility {
 
     // Here: Temporary variables
 
+    public static float forgingEquipmentQuality = 1f; // Base 1f = 100% (lower is better), intended to be improved by Nanoforges
+
     public static float totalDailyOreExpenditure = 0f;
     public static float totalDailyMetalProduction = 0f;
     public static float totalDailyMachineBreakage = 0f;
 
     public static boolean hasBreakdownHappened = false;
+    public static boolean oreWasRefined = false;
 
     // Here: Ship forging capacity factors
 
@@ -55,8 +58,9 @@ public class ForgeProduction extends BaseToggleAbility {
     static {
 
         shipSizeEffect.put(ShipAPI.HullSize.DEFAULT, 0);
+        shipSizeEffect.put(ShipAPI.HullSize.FIGHTER, 0);
         shipSizeEffect.put(ShipAPI.HullSize.FRIGATE, 0);
-        shipSizeEffect.put(ShipAPI.HullSize.DESTROYER, 0);
+        shipSizeEffect.put(ShipAPI.HullSize.DESTROYER, 2);
         shipSizeEffect.put(ShipAPI.HullSize.CRUISER, 4);
         shipSizeEffect.put(ShipAPI.HullSize.CAPITAL_SHIP, 8);
 
@@ -87,6 +91,12 @@ public class ForgeProduction extends BaseToggleAbility {
 
             }
 
+            if (oreWasRefined) {
+
+                applyRefiningCRMalus(fleet);
+
+            }
+
             if (showNotification) {
 
                 final String ores = String.valueOf((int) (totalDailyOreExpenditure));
@@ -97,6 +107,8 @@ public class ForgeProduction extends BaseToggleAbility {
 
                 Global.getSector().getIntelManager().addIntel(new BaseIntelPlugin() {
 
+                    // Add booleans for different conversion types. If no types were performed, no report.
+
                     @Override
                     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
 
@@ -105,16 +117,27 @@ public class ForgeProduction extends BaseToggleAbility {
 
                         Color highlightColor = Misc.getHighlightColor();
 
-                        info.addPara(metalProductionLine, 2, METAL_COLOR, highlightColor, ores, metals);
+                        if (oreWasRefined) {
+                            info.addPara(metalProductionLine, 2, METAL_COLOR, highlightColor, ores, metals);
+                        }
 
-                        if (breakdownReport)
+                        if (breakdownReport) {
                             info.addPara(machineryBreakdownsLine, 2, WARNING_COLOR, highlightColor, machineryBreakdowns);
+                        }
 
-                        // Jaghaimo: die, you served your purpose
+                        // Jaghaimo: Die, you served your purpose
                         Global.getSector().getIntelManager().removeIntel(this);
                     }
                 }
                 );
+
+                totalDailyOreExpenditure = 0f;
+                totalDailyMetalProduction = 0f;
+                totalDailyMachineBreakage = 0f;
+
+                hasBreakdownHappened = false;
+                oreWasRefined = false;
+
             }
         }
     }
@@ -160,13 +183,17 @@ public class ForgeProduction extends BaseToggleAbility {
         useAllowedByListener = useAllowed;
     }
 
+    public static void setNanoforgeQuality (float quality) {
+        forgingEquipmentQuality = quality;
+    }
+
     private int getRefiningCapacity(CampaignFleetAPI fleet) {
         int totalRefiningCapacity = 0;
         for (FleetMemberAPI member : fleet.getFleetData().getMembersListCopy()) {
             if ((member.getRepairTracker().isSuspendRepairs() || member.getRepairTracker().isMothballed()))
                 continue;
             if (member.getVariant().hasHullMod("forge_refinery_module"))
-                totalRefiningCapacity += Math.round(shipSizeEffect.get(member.getVariant().getHullSize()) * member.getRepairTracker().getCR());
+                totalRefiningCapacity += Math.round(shipSizeEffect.get(member.getVariant().getHullSize()) * (member.getRepairTracker().getCR() / 0.7f));
         }
         return totalRefiningCapacity;
     }
@@ -176,7 +203,7 @@ public class ForgeProduction extends BaseToggleAbility {
             if ((member.getRepairTracker().isSuspendRepairs() || member.getRepairTracker().isMothballed()))
                 continue;
             if (member.getVariant().hasHullMod("forge_refinery_module"))
-                member.getRepairTracker().applyCREvent(-combatReadinessCost, "Produced goods");
+                member.getRepairTracker().applyCREvent(-(combatReadinessCost * (member.getRepairTracker().getCR() / 0.7f)), "Produced goods");
         }
     }
 
@@ -199,14 +226,12 @@ public class ForgeProduction extends BaseToggleAbility {
             int refiningCycles = (int) (Math.min(RefiningCapacity, Math.min(heavyMachineryInRefining,oreInRefining)));
 
             // Math.random returns number between 0 and 1. If returned is !< breakdownChance, expression is false and breakdown won't happen.
-            // So, 10% chance of breakdown.
+            // So, 20% chance of breakdown.
 
-            float breakdownChance = 0.1f;
-            boolean willHeavyMachineryBreakdown = (Math.random()<breakdownChance);
+            float baseBreakdownChance = 0.2f;
+            boolean willHeavyMachineryBreakdown = (Math.random()<(baseBreakdownChance*forgingEquipmentQuality));
 
-            // Reminder to expand on Breakdown mechanic later with Nanoforges.
-
-            int randomHeavyMachineryBreakdowns = MathUtils.getRandomNumberInRange(0, refiningCycles);
+            int randomHeavyMachineryBreakdowns = MathUtils.getRandomNumberInRange(0, Math.round(refiningCycles*forgingEquipmentQuality));
 
             float dailyOreSpent = oreCost * refiningCycles;
             float dailyMetalProduced = metalProduced * refiningCycles;
@@ -224,10 +249,9 @@ public class ForgeProduction extends BaseToggleAbility {
             totalDailyMachineBreakage = baseCommodityQuantity + dailyHeavyMachineryBroken;
 
             hasBreakdownHappened = willHeavyMachineryBreakdown;
+            oreWasRefined = true;
 
         }
-
-        applyRefiningCRMalus(fleet);
 
     }
 
