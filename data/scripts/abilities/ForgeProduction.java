@@ -26,7 +26,8 @@ public class ForgeProduction extends BaseToggleAbility {
 
     private final boolean showNotification = Global.getSettings().getBoolean("forge_show_notification");
 
-    private final float heavyMachineryCost = Global.getSettings().getFloat("forge_heavy_machinery_to_allow_refining");
+    private final float heavyMachineryOreCost = Global.getSettings().getFloat("forge_heavy_machinery_to_allow_ore_refining");
+    private final float heavyMachineryTransplutonicOreCost = Global.getSettings().getFloat("forge_heavy_machinery_to_allow_transplutonic_ore_refining");
 
     private final float oreCost = Global.getSettings().getFloat("forge_ore_to_refine");
     private final float metalProduced = Global.getSettings().getFloat("forge_metal_produced");
@@ -36,9 +37,10 @@ public class ForgeProduction extends BaseToggleAbility {
 
     private final float combatReadinessCost = Global.getSettings().getFloat("forge_combat_readiness_decay_when_producing");
 
-    private final IntervalUtil productionInterval = new IntervalUtil(0.9f,1.1f);
+    private final IntervalUtil productionInterval = new IntervalUtil(1f,1f);
 
     private static final Color METAL_COLOR = new Color(205, 205, 205, 255);
+    private static final Color TRANSPLUTONIC_COLOR = new Color(120, 120, 200, 255);
     private static final Color WARNING_COLOR = new Color(255, 100, 100, 255);
 
     // Here: Temporary variables
@@ -47,10 +49,15 @@ public class ForgeProduction extends BaseToggleAbility {
 
     public static float totalDailyOreExpenditure = 0f;
     public static float totalDailyMetalProduction = 0f;
+
+    public static float totalDailyTransplutonicOreExpenditure = 0f;
+    public static float totalDailyTransplutonicsProduction = 0f;
+
     public static float totalDailyMachineBreakage = 0f;
 
     public static boolean hasBreakdownHappened = false;
     public static boolean oreWasRefined = false;
+    public static boolean transplutonicsWereRefined = false;
 
     // Here: Ship forging capacity factors
 
@@ -86,39 +93,57 @@ public class ForgeProduction extends BaseToggleAbility {
             float oreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.ORE);
 
             if (oreAvailable > oreCost) {
-
                 refineOre();
-
             }
 
-            if (oreWasRefined) {
+            float transplutonicOreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.RARE_ORE);
+
+            if (transplutonicOreAvailable > transplutonicOreCost) {
+                refineTransplutonicOre();
+            }
+
+            if (oreWasRefined || transplutonicsWereRefined) {
 
                 applyRefiningCRMalus(fleet);
 
             }
 
-            if (showNotification) {
+            if (showNotification && ((oreWasRefined || transplutonicsWereRefined))) {
 
-                final String ores = String.valueOf((int) (totalDailyOreExpenditure));
-                final String metals = String.valueOf((int) (totalDailyMetalProduction));
+                final String ore = String.valueOf((int) (totalDailyOreExpenditure));
+                final String metal = String.valueOf((int) (totalDailyMetalProduction));
+
+                final String transplutonicOre = String.valueOf((int) (totalDailyTransplutonicOreExpenditure));
+                final String transplutonics = String.valueOf((int) (totalDailyTransplutonicsProduction));
 
                 final boolean breakdownReport = hasBreakdownHappened;
                 final String machineryBreakdowns = String.valueOf((int) (totalDailyMachineBreakage));
 
                 Global.getSector().getIntelManager().addIntel(new BaseIntelPlugin() {
 
-                    // Add booleans for different conversion types. If no types were performed, no report.
+                    @Override public String getIcon() {
+                        return "forge_production_report";
+                    }
 
                     @Override
                     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
 
-                        String metalProductionLine = ores + " ores were refined into " + metals + " metals";
+                        Color titleColor = getTitleColor(mode);
+
+                        String metalProductionLine = ore + " units of ore were refined into " + metal + " units of metal";
+                        String transplutonicsProductionLine = transplutonicOre + " units of transplutonic ore were refined into " + transplutonics + " units of transplutonics";
                         String machineryBreakdownsLine = machineryBreakdowns + " heavy machinery broke down";
 
                         Color highlightColor = Misc.getHighlightColor();
 
+                        info.addPara("Forge Production - Report", titleColor, 0f);
+
                         if (oreWasRefined) {
-                            info.addPara(metalProductionLine, 2, METAL_COLOR, highlightColor, ores, metals);
+                            info.addPara(metalProductionLine, 2, METAL_COLOR, highlightColor, ore, metal);
+                        }
+
+                        if (transplutonicsWereRefined) {
+                            info.addPara(transplutonicsProductionLine, 2, TRANSPLUTONIC_COLOR, highlightColor, transplutonicOre, transplutonics);
                         }
 
                         if (breakdownReport) {
@@ -133,10 +158,15 @@ public class ForgeProduction extends BaseToggleAbility {
 
                 totalDailyOreExpenditure = 0f;
                 totalDailyMetalProduction = 0f;
+
+                totalDailyTransplutonicOreExpenditure = 0f;
+                totalDailyTransplutonicsProduction = 0f;
+
                 totalDailyMachineBreakage = 0f;
 
                 hasBreakdownHappened = false;
                 oreWasRefined = false;
+                transplutonicsWereRefined = false;
 
             }
         }
@@ -207,14 +237,16 @@ public class ForgeProduction extends BaseToggleAbility {
         }
     }
 
+    // Here: Conversion methods
+
     private void refineOre() {
 
         CampaignFleetAPI fleet = getFleet();
 
         float heavyMachineryAvailable = fleet.getCargo().getCommodityQuantity(Commodities.HEAVY_MACHINERY);
-        if (heavyMachineryAvailable <= heavyMachineryCost) return;
+        if (heavyMachineryAvailable <= heavyMachineryOreCost) return;
 
-        float heavyMachineryInRefining = heavyMachineryAvailable/heavyMachineryCost;
+        float heavyMachineryInRefining = heavyMachineryAvailable/ heavyMachineryOreCost;
         float oreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.ORE);
 
         float RefiningCapacity = getRefiningCapacity(fleet);
@@ -228,7 +260,7 @@ public class ForgeProduction extends BaseToggleAbility {
             // Math.random returns number between 0 and 1. If returned is !< breakdownChance, expression is false and breakdown won't happen.
             // So, 20% chance of breakdown.
 
-            float baseBreakdownChance = 0.2f;
+            float baseBreakdownChance = 0.1f;
             boolean willHeavyMachineryBreakdown = (Math.random()<(baseBreakdownChance*forgingEquipmentQuality));
 
             int randomHeavyMachineryBreakdowns = MathUtils.getRandomNumberInRange(0, Math.round(refiningCycles*forgingEquipmentQuality));
@@ -253,6 +285,53 @@ public class ForgeProduction extends BaseToggleAbility {
 
         }
 
+    }
+
+    private void refineTransplutonicOre() {
+
+        CampaignFleetAPI fleet = getFleet();
+
+        float heavyMachineryAvailable = fleet.getCargo().getCommodityQuantity(Commodities.HEAVY_MACHINERY);
+        if (heavyMachineryAvailable <= heavyMachineryTransplutonicOreCost) return;
+
+        float heavyMachineryInRefining = heavyMachineryAvailable/ heavyMachineryTransplutonicOreCost;
+        float transplutonicOreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.RARE_ORE);
+
+        float RefiningCapacity = getRefiningCapacity(fleet);
+
+        if (transplutonicOreAvailable > transplutonicOreCost) {
+
+            float transplutonicOreInRefining = transplutonicOreAvailable / transplutonicOreCost;
+
+            int refiningCycles = (int) (Math.min(RefiningCapacity, Math.min(heavyMachineryInRefining, transplutonicOreInRefining)));
+
+            // Math.random returns number between 0 and 1. If returned is !< breakdownChance, expression is false and breakdown won't happen.
+            // So, 20% chance of breakdown.
+
+            float baseBreakdownChance = 0.1f;
+            boolean willHeavyMachineryBreakdown = (Math.random() < (baseBreakdownChance * forgingEquipmentQuality));
+
+            int randomHeavyMachineryBreakdowns = MathUtils.getRandomNumberInRange(0, Math.round(refiningCycles * forgingEquipmentQuality));
+
+            float dailyTransplutonicOreSpent = transplutonicOreCost * refiningCycles;
+            float dailyTransplutonicsProduced = transplutonicsProduced * refiningCycles;
+            float dailyHeavyMachineryBroken = heavyMachineryInRefining * randomHeavyMachineryBreakdowns;
+
+            fleet.getCargo().removeCommodity(Commodities.RARE_ORE, dailyTransplutonicOreSpent);
+            fleet.getCargo().addCommodity(Commodities.RARE_METALS, dailyTransplutonicsProduced);
+            if(willHeavyMachineryBreakdown)
+                fleet.getCargo().removeCommodity(Commodities.HEAVY_MACHINERY, dailyHeavyMachineryBroken);
+
+            float baseCommodityQuantity = 0f;
+
+            totalDailyTransplutonicOreExpenditure = baseCommodityQuantity + dailyTransplutonicOreSpent;
+            totalDailyTransplutonicsProduction = baseCommodityQuantity + dailyTransplutonicsProduced;
+            totalDailyMachineBreakage = baseCommodityQuantity + dailyHeavyMachineryBroken;
+
+            hasBreakdownHappened = willHeavyMachineryBreakdown;
+            transplutonicsWereRefined = true;
+
+        }
     }
 
 }

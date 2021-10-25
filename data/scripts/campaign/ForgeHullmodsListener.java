@@ -44,11 +44,11 @@ public class ForgeHullmodsListener implements EveryFrameScript {
         int pristineNanoforgesQuantity = Math.round(playerFleet.getCargo().getQuantity(CargoAPI.CargoItemType.SPECIAL, new SpecialItemData(Items.PRISTINE_NANOFORGE, null)));
 
         if ((corruptedNanoforgesQuantity >= 1) && (pristineNanoforgesQuantity < 1) ) {
-            ForgeProduction.setNanoforgeQuality( 0.8f );
+            ForgeProduction.setNanoforgeQuality( 0.75f ); // Corrupted Nanoforge gives -25% breakdown rate
         }
 
         if ((pristineNanoforgesQuantity >= 1)) {
-            ForgeProduction.setNanoforgeQuality( 0.5f );
+            ForgeProduction.setNanoforgeQuality( 0.5f ); // Pristine Nanoforge gives -50% breakdown rate
         }
 
         if ((corruptedNanoforgesQuantity < 1) && (pristineNanoforgesQuantity < 1) ) {
