@@ -58,4 +58,80 @@ Architecture draft:
  - Further listeners that do actual conversion (TBD later). 
       	  [**Will also create a unified production message**]
         
-       
+25.10.2021
+
+    What do we need?
+
+    - commodity conversion
+
+    - way to toggle on/off for each conversion type
+
+    - requirement for Heavy Machinery availability
+
+    - way to control production scale
+
+    - therefore, granularity for ship amount, ship size and combat readiness (forging capacities must be bestowed by ships)
+
+    - restrictions for ship's forging capacities (can't do everything at once)
+
+    - each ship engaged in production gets combat readiness malus daily
+
+    - Salvage Gantry throughput bonuses
+
+    - Nanoforges efficiency bonuses
+
+    - tooltip information for each ship's forging capacity (in hullmod)
+
+    - tooltip information for fleet's forging capacity (in ability)
+
+    - single production report for daily forging activity (by ability OR listener)
+
+    - SFX for daily production report
+
+    OPTIONAL:
+
+    - allow forging hullmods to be installable on destroyer
+
+    - restrict forging hullmods to civilian-grade hulls
+
+    - create a whitelist of specific hulls to be eligible for forge hullmods installation
+
+    - add individual hullmod capacity/efficiency/throughput bonuses when installed on specific hulls
+
+    - add built-in hullmod bonuses
+
+    Architecture:
+
+    1. Ability class
+
+    - contains logic for conversion
+
+    Multiple abilities: individual toggles for each type.
+
+    - needs a listener to declare unified production report
+
+    - introduces much bloat
+
+    Single ability: toggle for all production, individual types are disabled through ship repairs. [GOING WITH THIS ONE]
+
+    - can contain logic for unified production report
+
+    2. Usability listener class
+
+    - restricts ability usage based on hullmod presence in fleet.
+    (need to have this information in ability tooltip)
+
+    3. Hullmod classes
+
+    Main hullmod for module installation restrictions and general ship stats modification.
+
+    Multiple module hullmods for each conversion type. Every conversion needs some Heavy Machinery available.
+
+    - Refinery module: refines Metal from Ore and Transplutonics from Transplutonic Ore. (Maybe split this one into two?)
+
+    - Centrifuge Module : centrifuges Fuel from Volatiles. Adds a little bit of fuel capacity.
+
+    - Manufacture Module: manufactures Supplies from Metal and Transplutonics.
+
+    - Machineworking Module: manufactures Heavy Machinery from Metal and Transplutonics.
+
