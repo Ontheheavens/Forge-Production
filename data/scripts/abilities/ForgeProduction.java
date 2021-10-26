@@ -1,21 +1,25 @@
 package data.scripts.abilities;
 
 import java.awt.Color;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignFleetAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Commodities;
-import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
+import com.fs.starfarer.api.util.Misc;
+import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.abilities.BaseToggleAbility;
-import com.fs.starfarer.api.util.IntervalUtil;
-import com.fs.starfarer.api.util.Misc;
+import com.fs.starfarer.api.impl.campaign.ids.Commodities;
+import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 
+import data.scripts.campaign.ForgeHullmodsListener;
 import org.lazywizard.lazylib.MathUtils;
 
 public class ForgeProduction extends BaseToggleAbility {
@@ -205,6 +209,24 @@ public class ForgeProduction extends BaseToggleAbility {
         float pad = 10f;
         tooltip.addPara("Control forge production of your fleet.", pad);
 
+        tooltip.addPara("The following ships in your fleet have forging capabilities:", pad);
+
+        List<FleetMemberAPI> forgeShips = getForgeShipsInFleet();
+
+        float currPad = 3.0F;
+        String indent = "    ";
+        for (FleetMemberAPI member : forgeShips) {
+
+            LabelAPI label = tooltip.addPara(indent + " %s",
+                    currPad,
+                    Misc.getHighlightColor(),
+                    member.getShipName() + " [" + member.getHullSpec().getHullNameWithDashClass() + "]" + " - " + getForgeHullmodOfForgeShip(member));
+
+            currPad = 0.0F;
+        }
+
+        addIncompatibleToTooltip(tooltip, expanded);
+
     }
 
     //Here: Custom methods
@@ -235,6 +257,36 @@ public class ForgeProduction extends BaseToggleAbility {
             if (member.getVariant().hasHullMod("forge_refinery_module"))
                 member.getRepairTracker().applyCREvent(-(combatReadinessCost * (member.getRepairTracker().getCR() / 0.7f)), "Produced goods");
         }
+    }
+
+    protected List<FleetMemberAPI> getForgeShipsInFleet() {
+
+        List<String> forgeHullMods = new ArrayList<>();
+
+        {
+            forgeHullMods.add("forge_refinery_module");
+        }
+
+        List<FleetMemberAPI> membersWithHullMod = new ArrayList<>();
+
+        CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
+
+        for (FleetMemberAPI forgeShip : playerFleet.getFleetData().getMembersListCopy())
+            if (!Collections.disjoint(forgeShip.getVariant().getHullMods(), forgeHullMods))
+                membersWithHullMod.add(forgeShip);
+
+        return membersWithHullMod;
+    }
+
+    protected String getForgeHullmodOfForgeShip (FleetMemberAPI member) {
+
+         if (member.getVariant().hasHullMod("forge_refinery_module")) {
+             return "Forge Refinery Module";
+         }
+
+         // Expand later
+
+        return null;
     }
 
     // Here: Conversion methods

@@ -1,3 +1,4 @@
 name,id,tier,rarity,tech/manufacturer,tags,uiTags,"base value",unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sprite
-"Refinery Module",forge_refinery_module,3,"0.2
-",Forge,special,Special,120000,FALSE,FALSE,FALSE,10,15,20,25,data.scripts.hullmods.ForgeRefineryModule,"Installs an omni-smelter module in the ship's forge bay, allowing it to autonomously convert raw ore into refined materials.","Allows refining of ore.",graphics/hullmods/placeholder.png
+"Ore Refinery Module",forge_refinery_module,3,"0.2
+",Forge,special,Special,120000,TRUE,FALSE,FALSE,15,15,20,25,data.scripts.hullmods.ForgeRefineryModule,"Installs an ore refinery module in the ship's forge bay, allowing it to refine raw ore into usable materials.","Allows refining of ore.",graphics/hullmods/placeholder.png
+"Forge Ship",forge_ship,2,0.3,Forge,special,Special,100000,TRUE,FALSE,FALSE,10,10,15,20,data.scripts.hullmods.ForgeShip,"Refits part of ship's available cargo space into an improvised forge bay compound, allowing for installation of various forge modules.","Allows installation of forge modules.",graphics/hullmods/placeholder.png
