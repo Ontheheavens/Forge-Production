@@ -11,15 +11,16 @@
       <excludeFolder url="file://$MODULE_DIR$/data/config" />
       <excludeFolder url="file://$MODULE_DIR$/jars" />
       <excludeFolder url="file://$MODULE_DIR$/data/campaign" />
+      <excludeFolder url="file://$MODULE_DIR$/jar" />
       <excludePattern pattern=".gitignore" />
-      <excludePattern pattern="forge_production.iml" />
+      <excludePattern pattern="Forge Production.iml" />
       <excludePattern pattern="README.md" />
       <excludePattern pattern="abilities.csv" />
       <excludePattern pattern="mod_info.json" />
+      <excludePattern pattern="forge_production_settings.ini" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Starsector Core" level="project" />
-    <orderEntry type="library" name="Lazy Lib" level="project" />
   </component>
 </module>

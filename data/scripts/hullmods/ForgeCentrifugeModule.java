@@ -8,20 +8,19 @@ import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import data.scripts.plugins.ForgeSettings;
 
-import static data.scripts.abilities.conversion.ForgeConversionVariables.*;
 import static data.scripts.hullmods.ForgeHullmodsGeneral.*;
 
-public class ForgeRefineryModule extends BaseHullMod {
+public class ForgeCentrifugeModule extends BaseHullMod {
 
     private static final Set<String> OTHER_FORGE_HULLMODS = new HashSet<>();
     static
     {
-        OTHER_FORGE_HULLMODS.add("forge_centrifuge_module");
+        OTHER_FORGE_HULLMODS.add("forge_refinery_module");
         OTHER_FORGE_HULLMODS.add("forge_manufacture_module");
         OTHER_FORGE_HULLMODS.add("forge_assembly_module");
     }
@@ -29,15 +28,15 @@ public class ForgeRefineryModule extends BaseHullMod {
     @Override
     public void applyEffectsBeforeShipCreation(ShipAPI.HullSize hullSize, MutableShipStatsAPI stats, String id) {
 
-        if (stats.getVariant().getSMods().contains("forge_refinery_module") ||
-            stats.getVariant().getHullSpec().isBuiltInMod("forge_refinery_module")) {
+        if (stats.getVariant().getSMods().contains("forge_centrifuge_module") ||
+                stats.getVariant().getHullSpec().isBuiltInMod("forge_centrifuge_module")) {
 
             float cargoMalus = shipCargoMalus.get(hullSize);
             stats.getCargoMod().modifyFlat(id, -cargoMalus);
 
             float nullifiedMalus = 0f;
-            stats.getSuppliesPerMonth().modifyFlat(id, -nullifiedMalus);
-            stats.getMinCrewMod().modifyFlat(id, -nullifiedMalus);
+            stats.getSuppliesPerMonth().modifyFlat(id, nullifiedMalus);
+            stats.getMinCrewMod().modifyFlat(id, nullifiedMalus);
 
         }
         else {
@@ -64,6 +63,7 @@ public class ForgeRefineryModule extends BaseHullMod {
         return null;
     }
 
+
     public void addPostDescriptionSection(TooltipMakerAPI tooltip, ShipAPI.HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 
         if (ship != null)
@@ -83,15 +83,12 @@ public class ForgeRefineryModule extends BaseHullMod {
                     highlightColor, highlightColor, highlightColor, highlightColor
             };
 
-            String ore = String.valueOf(((int)(ForgeSettings.ORE_TO_REFINE) * shipModifier));
-            String metal = String.valueOf(((int)(ForgeSettings.METAL_PRODUCED) * shipModifier));
-            String transplutonicOre = String.valueOf(((int)(ForgeSettings.TRANSPLUTONIC_ORE_TO_REFINE) * shipModifier));
-            String transplutonics = String.valueOf(((int)(ForgeSettings.TRANSPLUTONICS_PRODUCED) * shipModifier));
+            String volatiles = String.valueOf(((int)(ForgeSettings.VOLATILES_TO_CENTRIFUGE) * shipModifier));
+            String fuel = String.valueOf(((int)(ForgeSettings.FUEL_PRODUCED) * shipModifier));
 
-            String firstLine = " • Refines %s Ore into %s Metal and %s Transplutonic Ore into %s Transplutonics.";
+            String firstLine = " • Centrifuges %s Volatiles into %s Fuel.";
 
-            tooltip.addPara(firstLine, pad, firstLineHighlights,
-                    ore, metal, transplutonicOre, transplutonics);
+            tooltip.addPara(firstLine, pad, firstLineHighlights, volatiles, fuel);
 
             //Here: Second line
 
@@ -99,7 +96,7 @@ public class ForgeRefineryModule extends BaseHullMod {
                     highlightColor, highlightColor
             };
 
-            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_REFINING_USAGE) * shipModifier);
+            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_CENTRIFUGING_USAGE) * shipModifier);
             String breakdownChance = ((int)((float) ForgeSettings.BASE_BREAKDOWN_CHANCE * 100) + "%");
 
             String secondLine = " • Uses %s Heavy Machinery, with %s chance of breakdown." ;
@@ -119,9 +116,9 @@ public class ForgeRefineryModule extends BaseHullMod {
 
             if (isForModSpec) {
                 tooltip.addPara("If this hullmod is built in, additional crew requirement and maintenance cost increase are nullified.", Misc.getGrayColor(), 10f);
-            } else if (ship.getVariant().getSMods().contains("forge_refinery_module")) {
+            } else if (ship.getVariant().getSMods().contains("forge_centrifuge_module")) {
                 tooltip.addPara("S-mod Bonus: Additional crew requirement and maintenance cost increase are nullified.", Misc.getPositiveHighlightColor(), 10f);
-            } else if (ship.getHullSpec().isBuiltInMod("forge_refinery_module")) {
+            } else if (ship.getHullSpec().isBuiltInMod("forge_centrifuge_module")) {
                 tooltip.addPara("Built-in Bonus: Additional crew requirement and maintenance cost increase are nullified.", Misc.getPositiveHighlightColor(), 10f);
             } else {
                 tooltip.addPara("If this hullmod is built in, additional crew requirement and maintenance cost increase are nullified.", Misc.getGrayColor(), 10f);
@@ -180,7 +177,6 @@ public class ForgeRefineryModule extends BaseHullMod {
         }
 
         return null;
-
     }
 
 }

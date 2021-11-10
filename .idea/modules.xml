@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/forge_production.iml" filepath="$PROJECT_DIR$/forge_production.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Forge Production.iml" filepath="$PROJECT_DIR$/Forge Production.iml" />
     </modules>
   </component>
 </project>

@@ -1,9 +1,10 @@
 {
-  "id":"forge_production",
+	"id":"forge_production",
 	"name":"Forge Production",
 	"author":"Ontheheavens",
-	"version":"0.0.1",
+	"version":"0.1.2",
 	"description":"Hullmods that allow ships to produce commodities.",
 	"gameVersion":"0.95a",
 	"jars":["jars/forge_production.jar"],
+	"modPlugin":"data.scripts.plugins.ForgeModPlugin",
 }

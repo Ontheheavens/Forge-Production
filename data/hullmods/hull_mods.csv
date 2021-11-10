@@ -1,4 +1,13 @@
 name,id,tier,rarity,tech/manufacturer,tags,uiTags,"base value",unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sprite
-"Ore Refinery Module",forge_refinery_module,3,"0.2
-",Forge,special,Special,120000,TRUE,FALSE,FALSE,15,15,20,25,data.scripts.hullmods.ForgeRefineryModule,"Installs an ore refinery module in the ship's forge bay, allowing it to refine raw ore into usable materials.","Allows refining of ore.",graphics/hullmods/placeholder.png
-"Forge Ship",forge_ship,2,0.3,Forge,special,Special,100000,TRUE,FALSE,FALSE,10,10,15,20,data.scripts.hullmods.ForgeShip,"Refits part of ship's available cargo space into an improvised forge bay compound, allowing for installation of various forge modules.","Allows installation of forge modules.",graphics/hullmods/placeholder.png
+"Ore Refinery",forge_refinery_module,3,"0.2
+",Forge,special,Special,120000,TRUE,FALSE,FALSE,15,15,30,40,data.scripts.hullmods.ForgeRefineryModule,"Refits %s/%s available cargo space, depending on hull size, into ore refinery, allowing for refining of raw ores into processed forms. It requires additional %s/%s crew and %s/%s supplies per month, depending on hull size.
+
+Installable only on cruisers or capital ships with civilian-grade hull.","Allows refining of ore.",graphics/hullmods/ore_refinery_module.png
+"Fuel Centrifuge",forge_centrifuge_module,3,"0.2
+",Forge,special,Special,140000,TRUE,FALSE,FALSE,15,15,30,40,data.scripts.hullmods.ForgeCentrifugeModule,"Refits %s/%s available cargo space, depending on hull size, into fuel centrifuge, allowing for centrifuging of volatiles into fuel.  It requires additional %s/%s crew and %s/%s supplies per month, depending on hull size.
+
+Installable only on cruisers or capital ships with civilian-grade hull.","Allows centrifuging of volatiles.",graphics/hullmods/fuel_centrifuge_module.png
+"Supply Manufacture",forge_manufacture_module,3,"0.2
+",Forge,special,Special,160000,TRUE,FALSE,FALSE,15,15,30,40,data.scripts.hullmods.ForgeManufactureModule,"This forge module manufactures supplies from metal and transplutonics.","Allows manufacturing of supplies",graphics/hullmods/supply_manufacture_module.png
+"Machinery Assembly",forge_assembly_module,3,"0.2
+",Forge,special,Special,180000,TRUE,FALSE,FALSE,15,15,30,40,data.scripts.hullmods.ForgeAssemblyModule,"This forge module assembles heavy machinery from metal and transplutonics.","Allows assembling of heavy machinery",graphics/hullmods/machinery_assembly_module.png
