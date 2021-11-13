@@ -1,8 +1,8 @@
-package data.scripts.abilities;
+package data.forge.abilities;
 
 import java.awt.Color;
 
-import data.scripts.abilities.conversion.ForgeCentrifugingLogic;
+import data.forge.abilities.conversion.*;
 import org.lwjgl.util.vector.Vector2f;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.util.Misc;
@@ -11,13 +11,12 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.impl.campaign.abilities.BaseToggleAbility;
-import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 
-import data.scripts.campaign.ForgeConditionChecker;
-import data.scripts.campaign.ForgeProductionReport;
-import data.scripts.abilities.conversion.ForgeRefiningLogic;
-import static data.scripts.plugins.ForgeSettings.*;
-import static data.scripts.abilities.conversion.ForgeConversionVariables.*;
+import data.forge.campaign.ForgeProductionReport;
+
+import static data.forge.campaign.ForgeConditionChecker.*;
+import static data.forge.plugins.ForgeSettings.*;
+import static data.forge.abilities.conversion.ForgeConversionVariables.*;
 
 public class ForgeProduction extends BaseToggleAbility {
 
@@ -46,54 +45,26 @@ public class ForgeProduction extends BaseToggleAbility {
 
         if (productionInterval.intervalElapsed()) {
 
-            float oreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.ORE);
+            ForgeRefiningLogic.startRefining(fleet);
 
-            if (oreAvailable > ORE_TO_REFINE) {
-                ForgeRefiningLogic.refineOre(fleet);
-            }
+            ForgeCentrifugingLogic.startCentrifuging(fleet);
 
-            float transplutonicOreAvailable = fleet.getCargo().getCommodityQuantity(Commodities.RARE_ORE);
+            ForgeManufacturingLogic.startManufacturing(fleet);
 
-            if (transplutonicOreAvailable > TRANSPLUTONIC_ORE_TO_REFINE) {
-                ForgeRefiningLogic.refineTransplutonicOre(fleet);
-            }
+            ForgeAssemblingLogic.startAssembling(fleet);
 
-            if (oreWasRefined || transplutonicsWereRefined) {
+            if (goodsWereForged ()) {
 
-                ForgeRefiningLogic.applyRefiningCRMalus(fleet);
-
-                fleet.addFloatingText("Refined ores", Misc.setAlpha(Misc.getTextColor(), 255), 0.5f);
+                fleet.addFloatingText("Forged goods", Misc.setAlpha(Misc.getTextColor(), 255), 0.5f);
 
                 if(PLAY_SOUND_NOTIFICATION) {
                     Global.getSoundPlayer().playSound("ui_cargo_raremetals", 1f, 1f, fleet.getLocation(), ZERO);
                 }
 
-                oreWasRefined = false;
-                transplutonicsWereRefined = false;
+                clearGoodsStatus ();
             }
 
-            float volatilesAvailable = fleet.getCargo().getCommodityQuantity(Commodities.VOLATILES);
-
-            int possibleCentrifugingCycles = ForgeCentrifugingLogic.getPossibleCentrifugingCycles(fleet);
-
-            if (volatilesAvailable > VOLATILES_TO_CENTRIFUGE && possibleCentrifugingCycles >= 1) {
-                ForgeCentrifugingLogic.centrifugeFuel(fleet);
-            }
-
-            if (fuelWasCentrifuged) {
-
-                ForgeCentrifugingLogic.applyCentrifugingCRMalus(fleet);
-
-                fleet.addFloatingText("Centrifuged fuel", Misc.setAlpha(Misc.getTextColor(), 255), 0.5f);
-
-                if(PLAY_SOUND_NOTIFICATION) {
-                    Global.getSoundPlayer().playSound("ui_cargo_fuel", 1f, 1f, fleet.getLocation(), ZERO);
-                }
-
-                fuelWasCentrifuged = false;
-            }
-
-            if (SHOW_NOTIFICATION && ((oreRefiningReport || transplutonicsRefiningReport || fuelCentrifugingReport))) {
+            if (SHOW_NOTIFICATION && goodsProducedReport ()) {
                 notificationCounter += 1;
             }
 
@@ -106,6 +77,7 @@ public class ForgeProduction extends BaseToggleAbility {
             }
 
         }
+
     }
 
     protected void deactivateImpl() { cleanupImpl(); }
@@ -118,7 +90,7 @@ public class ForgeProduction extends BaseToggleAbility {
                 getProgressFraction() > 0 && getProgressFraction() < 1 &&
                 getDeactivationDays() > 0) return false;
 
-        if (!ForgeConditionChecker.hasActiveForgeShips())
+        if (!hasActiveForgeShips())
             return false;
 
         return super.isUsable();
@@ -150,18 +122,23 @@ public class ForgeProduction extends BaseToggleAbility {
         title.highlightLast(status);
         title.setHighlightColor(highlight);
 
-        float pad = 10f;
-        tooltip.addPara("Control forge production of your fleet.", pad);
+        tooltip.setLowGridRowHeight();
 
-        if (ForgeConditionChecker.hasActiveForgeShips()) {
+        float pad = 6f;
+        tooltip.addPara("Control forge production of your fleet.", pad);
+        tooltip.addPara("Your fleet must have ships with active forge modules to produce goods. " +
+                "Ships that are mothballed or do not receive repairs are unable to use their forge modules. " +
+                "Production also uses heavy machinery, which must be present but is not consumed, and can break accidentally.", pad);
+
+        if (hasActiveForgeShips() && expanded) {
             ForgeProductionTooltip.addOperationalShipsBreakdown(tooltip);
         }
 
-        if (ForgeConditionChecker.hasInactiveForgeShips()) {
+        if (hasInactiveForgeShips() && expanded) {
             ForgeProductionTooltip.addInactiveShipsBreakdown(tooltip);
         }
 
-        if (!ForgeConditionChecker.hasActiveForgeShips()) {
+        if (!hasActiveForgeShips()) {
             tooltip.addPara("Your fleet currently cannot conduct forging operations.", negativeHighlight, pad);
         }
 

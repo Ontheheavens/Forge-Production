@@ -1,4 +1,4 @@
-package data.scripts.plugins;
+package data.forge.plugins;
 
 import java.io.IOException;
 import org.json.JSONException;
@@ -33,6 +33,18 @@ public class ForgeDataSupplier {
             ForgeSettings.FUEL_PRODUCED = settings.getInt("forge_fuel_produced");
             ForgeSettings.HEAVY_MACHINERY_CENTRIFUGING_USAGE = settings.getInt("forge_heavy_machinery_centrifuging_usage");
 
+            // Here: Manufacturing Settings
+            ForgeSettings.METAL_TO_MANUFACTURE = settings.getInt("forge_metal_to_manufacture");
+            ForgeSettings.TRANSPLUTONICS_TO_MANUFACTURE = settings.getInt("forge_transplutonics_to_manufacture");
+            ForgeSettings.SUPPLIES_PRODUCED = settings.getInt("forge_supplies_produced");
+            ForgeSettings.HEAVY_MACHINERY_MANUFACTURING_USAGE = settings.getInt("forge_heavy_machinery_manufacturing_usage");
+
+            // Here: Assembling Settings
+            ForgeSettings.METAL_TO_ASSEMBLE = settings.getInt("forge_metal_to_assemble");
+            ForgeSettings.TRANSPLUTONICS_TO_ASSEMBLE = settings.getInt("forge_transplutonics_to_assemble");
+            ForgeSettings.HEAVY_MACHINERY_PRODUCED = settings.getInt("forge_heavy_machinery_produced");
+            ForgeSettings.HEAVY_MACHINERY_ASSEMBLING_USAGE = settings.getInt("forge_heavy_machinery_assembling_usage");
+
             // Here: Machinery Breakdown Settings
             ForgeSettings.BASE_BREAKDOWN_CHANCE = settings.getDouble("forge_base_heavy_machinery_breakdown_chance");
             ForgeSettings.BREAKDOWN_SEVERITY = settings.getDouble("forge_heavy_machinery_breakdown_severity");
@@ -45,6 +57,10 @@ public class ForgeDataSupplier {
             ForgeSettings.PRISTINE_NANOFORGE_QUALITY_BONUS = settings.getDouble("forge_pristine_nanoforge_quality_bonus");
             ForgeSettings.CATALYTIC_CORE_REFINING_BONUS = settings.getInt("forge_catalytic_core_refining_bonus");
             ForgeSettings.SYNCHROTRON_CORE_CENTRIFUGING_BONUS = settings.getInt("forge_synchrotron_core_centrifuging_bonus");
+            ForgeSettings.CORRUPTED_NANOFORGE_MANUFACTURING_BONUS = settings.getInt("forge_corrupted_nanoforge_manufacturing_bonus");
+            ForgeSettings.PRISTINE_NANOFORGE_MANUFACTURING_BONUS = settings.getInt("forge_pristine_nanoforge_manufacturing_bonus");
+            ForgeSettings.CORRUPTED_NANOFORGE_ASSEMBLING_BONUS = settings.getInt("forge_corrupted_nanoforge_assembling_bonus");
+            ForgeSettings.PRISTINE_NANOFORGE_ASSEMBLING_BONUS = settings.getInt("forge_pristine_nanoforge_assembling_bonus");
 
     }
 

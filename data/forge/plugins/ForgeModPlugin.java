@@ -1,4 +1,4 @@
-package data.scripts.plugins;
+package data.forge.plugins;
 
 import java.io.IOException;
 import org.json.JSONException;

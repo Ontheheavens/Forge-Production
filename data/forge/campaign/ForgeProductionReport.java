@@ -1,4 +1,4 @@
-package data.scripts.campaign;
+package data.forge.campaign;
 
 import java.awt.*;
 
@@ -7,8 +7,8 @@ import com.fs.starfarer.api.util.Misc;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 
-import data.scripts.abilities.conversion.ForgeConversionVariables;
-import static data.scripts.plugins.ForgeSettings.NOTIFICATION_INTERVAL;
+import data.forge.abilities.conversion.ForgeConversionVariables;
+import static data.forge.plugins.ForgeSettings.NOTIFICATION_INTERVAL;
 
 public class ForgeProductionReport extends BaseIntelPlugin {
 
@@ -48,34 +48,44 @@ public class ForgeProductionReport extends BaseIntelPlugin {
 
         bullet(info);
 
-        String oreValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalOreExpenditure));
         String metalValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalMetalProduction));
-
-        String transplutonicOreValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalTransplutonicOreExpenditure));
         String transplutonicsValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalTransplutonicsProduction));
-        String volatilesValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalVolatilesExpenditure));
         String fuelValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalFuelProduction));
+        String suppliesValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalSuppliesProduction));
+        String heavyMachineryValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalHeavyMachineryProduction));
 
         String machineryBreakdownsValue = Misc.getWithDGS((int) (ForgeConversionVariables.totalMachineryBreakage));
 
-        String metalProductionLine = oreValue + " ore refined into " + metalValue + " metal";
-        String transplutonicsProductionLine = transplutonicOreValue + " transplutonic ore refined into " + transplutonicsValue + " transplutonics";
-        String fuelProductionLine = volatilesValue + " volatiles centrifuged into " + fuelValue + " fuel";
+        String metalProductionLine =  metalValue + " metal produced";
+        String transplutonicsProductionLine = transplutonicsValue + " transplutonics produced";
+        String fuelProductionLine = fuelValue + " fuel produced";
+        String suppliesProductionLine = suppliesValue + " supplies produced";
+        String heavyMachineryProductionLine = heavyMachineryValue + " heavy machinery produced";
         String machineryBreakdownsLine = machineryBreakdownsValue + " heavy machinery broke down";
 
         if (ForgeConversionVariables.oreRefiningReport) {
             info.addPara(metalProductionLine, pad, textColor, Misc.getHighlightColor(),
-                    oreValue, metalValue);
+                    metalValue);
         }
 
         if (ForgeConversionVariables.transplutonicsRefiningReport) {
             info.addPara(transplutonicsProductionLine, pad, textColor, Misc.getHighlightColor(),
-                    transplutonicOreValue, transplutonicsValue);
+                    transplutonicsValue);
         }
 
         if (ForgeConversionVariables.fuelCentrifugingReport) {
             info.addPara(fuelProductionLine, pad, textColor, Misc.getHighlightColor(),
-                    volatilesValue, fuelValue);
+                    fuelValue);
+        }
+
+        if (ForgeConversionVariables.suppliesManufacturingReport) {
+            info.addPara(suppliesProductionLine, pad, textColor, Misc.getHighlightColor(),
+                    suppliesValue);
+        }
+
+        if (ForgeConversionVariables.heavyMachineryAssemblingReport) {
+            info.addPara(heavyMachineryProductionLine, pad, textColor, Misc.getHighlightColor(),
+                    heavyMachineryValue);
         }
 
         if (ForgeConversionVariables.breakdownReport) {
@@ -86,24 +96,20 @@ public class ForgeProductionReport extends BaseIntelPlugin {
         unindent(info);
     }
 
-    //Here: Custom methods
-
     public void clearTemporaryVariables() {
 
-        ForgeConversionVariables.totalOreExpenditure = 0f;
         ForgeConversionVariables.totalMetalProduction = 0f;
-
-        ForgeConversionVariables.totalTransplutonicOreExpenditure = 0f;
         ForgeConversionVariables.totalTransplutonicsProduction = 0f;
-
-        ForgeConversionVariables.totalVolatilesExpenditure = 0f;
         ForgeConversionVariables.totalFuelProduction = 0f;
-
+        ForgeConversionVariables.totalSuppliesProduction = 0f;
+        ForgeConversionVariables.totalHeavyMachineryProduction = 0f;
         ForgeConversionVariables.totalMachineryBreakage = 0f;
 
         ForgeConversionVariables.oreRefiningReport = false;
         ForgeConversionVariables.transplutonicsRefiningReport = false;
         ForgeConversionVariables.fuelCentrifugingReport = false;
+        ForgeConversionVariables.suppliesManufacturingReport = false;
+        ForgeConversionVariables.heavyMachineryAssemblingReport = false;
         ForgeConversionVariables.breakdownReport = false;
 
     }

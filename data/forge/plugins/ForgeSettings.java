@@ -1,4 +1,4 @@
-package data.scripts.plugins;
+package data.forge.plugins;
 
 public class ForgeSettings {
 
@@ -23,6 +23,18 @@ public class ForgeSettings {
         public static float FUEL_PRODUCED = 24;
         public static float HEAVY_MACHINERY_CENTRIFUGING_USAGE = 8;
 
+        // Here: Manufacturing Settings
+        public static float METAL_TO_MANUFACTURE = 12;
+        public static float TRANSPLUTONICS_TO_MANUFACTURE = 2;
+        public static float SUPPLIES_PRODUCED = 8;
+        public static float HEAVY_MACHINERY_MANUFACTURING_USAGE = 10;
+
+        // Here: Assembling Settings
+        public static float METAL_TO_ASSEMBLE = 20;
+        public static float TRANSPLUTONICS_TO_ASSEMBLE = 2;
+        public static float HEAVY_MACHINERY_PRODUCED = 4;
+        public static float HEAVY_MACHINERY_ASSEMBLING_USAGE = 16;
+
         // Here: Machinery Breakdown  Settings
         public static double BASE_BREAKDOWN_CHANCE = 0.3;
         public static double BREAKDOWN_SEVERITY = 0.05;
@@ -33,7 +45,11 @@ public class ForgeSettings {
         // Here: Special Item Settings
         public static double CORRUPTED_NANOFORGE_QUALITY_BONUS = 0.8;
         public static double PRISTINE_NANOFORGE_QUALITY_BONUS = 0.5;
-        public static float CATALYTIC_CORE_REFINING_BONUS = 3;
-        public static float SYNCHROTRON_CORE_CENTRIFUGING_BONUS = 6;
+        public static int CATALYTIC_CORE_REFINING_BONUS = 3;
+        public static int SYNCHROTRON_CORE_CENTRIFUGING_BONUS = 6;
+        public static int CORRUPTED_NANOFORGE_MANUFACTURING_BONUS = 2;
+        public static int PRISTINE_NANOFORGE_MANUFACTURING_BONUS = 4;
+        public static int CORRUPTED_NANOFORGE_ASSEMBLING_BONUS = 1;
+        public static int PRISTINE_NANOFORGE_ASSEMBLING_BONUS = 2;
 
 }
