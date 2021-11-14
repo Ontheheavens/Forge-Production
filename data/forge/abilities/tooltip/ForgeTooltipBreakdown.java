@@ -23,7 +23,6 @@ public class ForgeTooltipBreakdown {
         Color textColor = Misc.getTextColor();
         Color highlightColor = Misc.getHighlightColor();
         Color negativeHighlight = Misc.getNegativeHighlightColor();
-        Color positiveHighlight = Misc.getPositiveHighlightColor();
 
         float pad = 10f;
 
@@ -37,51 +36,22 @@ public class ForgeTooltipBreakdown {
         tooltip.addSpacer(3f);
 
         int gridSize = 0;
-        float gridWidth = 195f;
-        tooltip.beginGridFlipped(gridWidth, 2, 40f, pad);
+        float gridWidth = 190f;
+        tooltip.beginGridFlipped(gridWidth, 2, 45f, pad);
 
         if (getForgingCapacity(fleet, REFINING) >= 1) {
 
             int maxMetalProductionCapacity = ((int) Math.ceil(getForgingCapacity(fleet, REFINING) *
                     (METAL_PRODUCED + ForgeConditionChecker.getCatalyticCoreBonus())));
-            String metalLabel = "Metal output.";
+            String metalLabel = "Metal / day";
 
             tooltip.addToGrid(0, gridSize++, metalLabel, "+" + Misc.getWithDGS(maxMetalProductionCapacity), highlightColor);
 
-            String hasOre = "      (Ore available)";
-            if (ForgeConditionChecker.getPlayerCargo(Commodities.ORE) >= (ORE_TO_REFINE)) {
-                tooltip.setGridLabelColor(positiveHighlight);
-                tooltip.addToGrid(1, gridSize - 1, hasOre, "", positiveHighlight);
-                tooltip.setGridLabelColor(textColor);
-            }
-
-            String hasNoOre = "    (Halted: no ore)";
-            if (ForgeConditionChecker.getPlayerCargo(Commodities.ORE) < (ORE_TO_REFINE)) {
-                tooltip.setGridLabelColor(negativeHighlight);
-                tooltip.addToGrid(1, gridSize - 1, hasNoOre, "", negativeHighlight);
-                tooltip.setGridLabelColor(textColor);
-            }
-
-
             int maxTransplutonicsProductionCapacity = (int) Math.ceil(getForgingCapacity(fleet, REFINING) *
                     (TRANSPLUTONICS_PRODUCED + ForgeConditionChecker.getCatalyticCoreBonus()));
-            String transplutonicsLabel = "Transplutonics output.";
+            String transplutonicsLabel = "Transplutonics / day";
 
             tooltip.addToGrid(0, gridSize++, transplutonicsLabel, "+" + Misc.getWithDGS(maxTransplutonicsProductionCapacity), highlightColor);
-
-            String hasTransplutonicOre = "      (Ore available)";
-            if (ForgeConditionChecker.getPlayerCargo(Commodities.RARE_ORE) >= (TRANSPLUTONIC_ORE_TO_REFINE)) {
-                tooltip.setGridLabelColor(positiveHighlight);
-                tooltip.addToGrid(1, gridSize - 1, hasTransplutonicOre, "", positiveHighlight);
-                tooltip.setGridLabelColor(textColor);
-            }
-
-            String hasNoTransplutonicOre = "    (Halted: no ore)";
-            if (ForgeConditionChecker.getPlayerCargo(Commodities.RARE_ORE) < (TRANSPLUTONIC_ORE_TO_REFINE)) {
-                tooltip.setGridLabelColor(negativeHighlight);
-                tooltip.addToGrid(1, gridSize - 1, hasNoTransplutonicOre, "", negativeHighlight);
-                tooltip.setGridLabelColor(textColor);
-            }
 
         }
 
@@ -91,7 +61,7 @@ public class ForgeTooltipBreakdown {
                     (FUEL_PRODUCED + ForgeConditionChecker.getSynchrotronCoreBonus()));
 
             String tanksAreFullFormat = "(Halted: tanks full)";
-            String fuelLabel = "Fuel output.";
+            String fuelLabel = "Fuel / day";
 
             tooltip.addToGrid(0, gridSize++, fuelLabel, "+" + Misc.getWithDGS(maxFuelProductionCapacity), highlightColor);
 
@@ -107,7 +77,7 @@ public class ForgeTooltipBreakdown {
 
             int maxSuppliesProductionCapacity = (int) Math.ceil(getForgingCapacity(fleet, MANUFACTURING) *
                     (SUPPLIES_PRODUCED + ForgeConditionChecker.getNanoforgeManufacturingBonus()));
-            String suppliesLabel = "Supplies output.";
+            String suppliesLabel = "Supplies / day";
 
             tooltip.addToGrid(0, gridSize++, suppliesLabel, "+" + Misc.getWithDGS(maxSuppliesProductionCapacity), highlightColor);
 
@@ -117,7 +87,7 @@ public class ForgeTooltipBreakdown {
 
             int maxHeavyMachineryProductionCapacity = (int) Math.ceil(getForgingCapacity(fleet, ASSEMBLING) *
                     (HEAVY_MACHINERY_PRODUCED + ForgeConditionChecker.getNanoforgeAssemblingBonus()));
-            String machineryLabel = "Machinery output.";
+            String machineryLabel = "Machinery / day";
 
             tooltip.addToGrid(0, gridSize++, machineryLabel, "+" + Misc.getWithDGS(maxHeavyMachineryProductionCapacity), highlightColor);
 
@@ -151,8 +121,8 @@ public class ForgeTooltipBreakdown {
         String machineryNeeded = Misc.getWithDGS(maxMachineryNeededFinal);
         String machineryAvailable = Misc.getWithDGS(heavyMachineryAvailable);
 
-        String demandMetFormat = "%sUsing all %s needed heavy machinery.";
-        String demandNotMetFormat = "%sUsing %s (out of %s needed) machinery.";
+        String demandMetFormat = "%sUsing all %s needed heavy machinery:";
+        String demandNotMetFormat = "%sUsing %s (out of %s needed) machinery:";
 
         if (heavyMachineryAvailable >= maxMachineryNeededFinal ) {
             tooltip.addPara(demandMetFormat, pad, positiveHighlights, indent, machineryNeeded);

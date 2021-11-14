@@ -42,19 +42,19 @@ public class ForgeCentrifugingLogic {
 
         int initialCentrifugingCycles = (int) Math.min(centrifugingCapacity, Math.min(machineryAvailableForCentrifuging, volatilesInCentrifuging));
 
-        int centrifugingCycles = Math.min(initialCentrifugingCycles, getPossibleCentrifugingCycles(fleet));
+        int centrifugingCycles = (int) Math.floor(Math.min(initialCentrifugingCycles, getPossibleCentrifugingCycles(fleet)));
 
         boolean willHeavyMachineryBreakdown = ForgeConditionChecker.getMachineryBreakdownChance();
         int machineryInCentrifuging = (int) Math.ceil((centrifugingCycles * HEAVY_MACHINERY_CENTRIFUGING_USAGE));
         int machineryBroken = 0;
 
         for (int machineryInCheck = 0; machineryInCheck < machineryInCentrifuging; machineryInCheck++) {
-            if (Math.random()<((float) BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality())) machineryBroken++;
+            if (Math.random()<(BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality())) machineryBroken++;
         }
 
-        float dailyVolatilesSpent = VOLATILES_TO_CENTRIFUGE * centrifugingCycles;
-        float dailyFuelProduced = (FUEL_PRODUCED + ForgeConditionChecker.getSynchrotronCoreBonus()) * centrifugingCycles;
-        float dailyHeavyMachineryBroken = machineryBroken;
+        int dailyVolatilesSpent = (int) Math.ceil(VOLATILES_TO_CENTRIFUGE * centrifugingCycles);
+        int dailyFuelProduced = (int) Math.floor((FUEL_PRODUCED + ForgeConditionChecker.getSynchrotronCoreBonus()) * centrifugingCycles);
+        int dailyHeavyMachineryBroken = machineryBroken;
 
         fleet.getCargo().removeCommodity(Commodities.VOLATILES, dailyVolatilesSpent);
         fleet.getCargo().addCommodity(Commodities.FUEL, dailyFuelProduced);

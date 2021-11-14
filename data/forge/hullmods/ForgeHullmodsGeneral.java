@@ -24,15 +24,15 @@ public class ForgeHullmodsGeneral {
         ALL_FORGE_HULLMODS.add("forge_assembly_module");
     }
 
-    public static final Map<ShipAPI.HullSize, Integer> shipSizeEffect = new HashMap<>();
+    public static Map<ShipAPI.HullSize, Integer> shipSizeEffect = new HashMap<>();
     static {
 
         shipSizeEffect.put(ShipAPI.HullSize.DEFAULT, 0);
         shipSizeEffect.put(ShipAPI.HullSize.FIGHTER, 0);
         shipSizeEffect.put(ShipAPI.HullSize.FRIGATE, 0);
         shipSizeEffect.put(ShipAPI.HullSize.DESTROYER, 0);
-        shipSizeEffect.put(ShipAPI.HullSize.CRUISER, 4);
-        shipSizeEffect.put(ShipAPI.HullSize.CAPITAL_SHIP, 6);
+        shipSizeEffect.put(ShipAPI.HullSize.CRUISER, ForgeSettings.CAPACITY_CRUISER);
+        shipSizeEffect.put(ShipAPI.HullSize.CAPITAL_SHIP, ForgeSettings.CAPACITY_CAPITAL);
 
     }
 
@@ -93,14 +93,14 @@ public class ForgeHullmodsGeneral {
     public static int getShipCapacityMod (ShipAPI ship, ShipAPI.HullSize hullSize) {
         int shipSize = shipSizeEffect.get(hullSize);
         float getCurrentCR = (ship.getFleetMember().getRepairTracker().getCR() / 0.7f);
-        return (int) Math.ceil((shipSize) * getCurrentCR);
+        return (int) Math.ceil(shipSize * getCurrentCR);
     }
 
     public static void addCRNoteLine(TooltipMakerAPI tooltip) {
 
         Color [] thirdLineHighlights = {Misc.getHighlightColor()};
 
-        String crDecrease = ((int)(((float) ForgeSettings.CR_PRODUCTION_DECAY)*100) + "%");
+        String crDecrease = ((int)(( ForgeSettings.CR_PRODUCTION_DECAY)*100) + "%");
         String CRNoteLine = " • Refining drains %s CR per day. Ships with low CR have lowered output and lose less CR." ;
 
         tooltip.addPara(CRNoteLine, 2f, thirdLineHighlights, crDecrease);
@@ -111,7 +111,7 @@ public class ForgeHullmodsGeneral {
 
         Color [] thirdLineHighlights = {Misc.getHighlightColor()};
 
-        String crDecrease = ((int)(((float) ForgeSettings.CR_PRODUCTION_DECAY)*100) + "%");
+        String crDecrease = ((int)(( ForgeSettings.CR_PRODUCTION_DECAY)*100) + "%");
         String InactiveLine = " • Ships that are mothballed or do not receive repairs cannot activate their forge modules." ;
 
         tooltip.addPara(InactiveLine, 2f, thirdLineHighlights, crDecrease);

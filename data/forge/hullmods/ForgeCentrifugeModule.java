@@ -79,12 +79,18 @@ public class ForgeCentrifugeModule extends BaseHullMod {
                     highlightColor, highlightColor, highlightColor, highlightColor
             };
 
-            String volatiles = String.valueOf(((int)(ForgeSettings.VOLATILES_TO_CENTRIFUGE) * getShipCapacityMod(ship,hullSize)));
-            String fuel = String.valueOf(((int)(ForgeSettings.FUEL_PRODUCED) * getShipCapacityMod(ship,hullSize)));
+            String volatiles = String.valueOf((int)(ForgeSettings.VOLATILES_TO_CENTRIFUGE * getShipCapacityMod(ship,hullSize)));
+            String fuel = String.valueOf((int)(ForgeSettings.FUEL_PRODUCED * getShipCapacityMod(ship,hullSize)));
 
             String firstLine = " • Centrifuges %s fuel from %s volatiles.";
+            String firstLineNoCapacity = " • Centrifuges fuel from volatiles.";
 
-            tooltip.addPara(firstLine, pad, firstLineHighlights, fuel, volatiles);
+            if (getShipCapacityMod(ship,hullSize) >= 1) {
+                tooltip.addPara(firstLine, pad, firstLineHighlights, fuel, volatiles);
+            }
+            if (getShipCapacityMod(ship,hullSize) < 1) {
+                tooltip.addPara(firstLineNoCapacity, pad);
+            }
 
             //Here: Second line
 
@@ -92,12 +98,18 @@ public class ForgeCentrifugeModule extends BaseHullMod {
                     highlightColor, highlightColor
             };
 
-            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_CENTRIFUGING_USAGE) * getShipCapacityMod(ship,hullSize));
-            String breakdownChance = ((int)((float) ForgeSettings.BASE_BREAKDOWN_CHANCE * 100) + "%");
+            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_CENTRIFUGING_USAGE * getShipCapacityMod(ship,hullSize)));
+            String breakdownChance = ((int)(ForgeSettings.BASE_BREAKDOWN_CHANCE * 100) + "%");
 
             String secondLine = " • Uses %s heavy machinery, with %s chance of breakdown." ;
+            String secondLineNoCapacity = " • Uses heavy machinery, with %s chance of breakdown." ;
 
-            tooltip.addPara(secondLine, 2f, secondLineHighlights, heavyMachineryUsage, breakdownChance);
+            if (getShipCapacityMod(ship,hullSize) >= 1) {
+                tooltip.addPara(secondLine, 2f, secondLineHighlights, heavyMachineryUsage, breakdownChance);
+            }
+            if (getShipCapacityMod(ship,hullSize) < 1) {
+                tooltip.addPara(secondLineNoCapacity, 2f, highlightColor, breakdownChance);
+            }
 
             //Here: Third line
 

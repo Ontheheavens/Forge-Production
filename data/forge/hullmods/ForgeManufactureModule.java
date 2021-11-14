@@ -3,7 +3,6 @@ package data.forge.hullmods;
 import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -80,13 +79,19 @@ public class ForgeManufactureModule extends BaseHullMod {
                     highlightColor, highlightColor, highlightColor
             };
 
-            String supplies = String.valueOf(((int)(ForgeSettings.SUPPLIES_PRODUCED) * getShipCapacityMod(ship,hullSize)));
-            String metal = String.valueOf(((int)(ForgeSettings.METAL_TO_MANUFACTURE) * getShipCapacityMod(ship,hullSize)));
-            String transplutonics = String.valueOf(((int)(ForgeSettings.TRANSPLUTONICS_TO_MANUFACTURE) * getShipCapacityMod(ship,hullSize)));
+            String supplies = String.valueOf((int)(ForgeSettings.SUPPLIES_PRODUCED * getShipCapacityMod(ship,hullSize)));
+            String metal = String.valueOf((int)(ForgeSettings.METAL_TO_MANUFACTURE * getShipCapacityMod(ship,hullSize)));
+            String transplutonics = String.valueOf((int)(ForgeSettings.TRANSPLUTONICS_TO_MANUFACTURE * getShipCapacityMod(ship,hullSize)));
 
             String firstLine = " • Manufactures %s supplies from %s metal and %s transplutonics.";
+            String firstLineNoCapacity = " • Manufactures supplies from metal and transplutonics.";
 
-            tooltip.addPara(firstLine, pad, firstLineHighlights, supplies, metal, transplutonics);
+            if (getShipCapacityMod(ship,hullSize) >= 1) {
+                tooltip.addPara(firstLine, pad, firstLineHighlights, supplies, metal, transplutonics);
+            }
+            if (getShipCapacityMod(ship,hullSize) < 1) {
+                tooltip.addPara(firstLineNoCapacity, pad);
+            }
 
             //Here: Second line
 
@@ -94,12 +99,18 @@ public class ForgeManufactureModule extends BaseHullMod {
                     highlightColor, highlightColor
             };
 
-            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_MANUFACTURING_USAGE) * getShipCapacityMod(ship,hullSize));
-            String breakdownChance = ((int)((float) ForgeSettings.BASE_BREAKDOWN_CHANCE * 100) + "%");
+            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_MANUFACTURING_USAGE * getShipCapacityMod(ship,hullSize)));
+            String breakdownChance = ((int)(ForgeSettings.BASE_BREAKDOWN_CHANCE * 100) + "%");
 
             String secondLine = " • Uses %s heavy machinery, with %s chance of breakdown." ;
+            String secondLineNoCapacity = " • Uses heavy machinery, with %s chance of breakdown." ;
 
-            tooltip.addPara(secondLine, 2f, secondLineHighlights, heavyMachineryUsage, breakdownChance);
+            if (getShipCapacityMod(ship,hullSize) >= 1) {
+                tooltip.addPara(secondLine, 2f, secondLineHighlights, heavyMachineryUsage, breakdownChance);
+            }
+            if (getShipCapacityMod(ship,hullSize) < 1) {
+                tooltip.addPara(secondLineNoCapacity, 2f, highlightColor, breakdownChance);
+            }
 
             //Here: Third line
 

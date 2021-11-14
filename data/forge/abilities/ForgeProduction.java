@@ -3,6 +3,7 @@ package data.forge.abilities;
 import java.awt.Color;
 
 import data.forge.abilities.conversion.*;
+import data.forge.plugins.ForgeSettings;
 import org.lwjgl.util.vector.Vector2f;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.util.Misc;
@@ -20,17 +21,18 @@ import static data.forge.abilities.conversion.ForgeConversionVariables.*;
 
 public class ForgeProduction extends BaseToggleAbility {
 
-    // Here: Declared constants
-
     private static final Vector2f ZERO = new Vector2f();
 
     private int notificationCounter = 0;
 
     private final IntervalUtil productionInterval = new IntervalUtil(1f,1f);
 
-    // Here: Inherited methods
-
     protected void activateImpl() { }
+
+    @Override
+    protected String getActivationText() {
+        return "Commencing forge production";
+    }
 
     protected void applyEffect(float amount, float level) {
 
@@ -38,6 +40,11 @@ public class ForgeProduction extends BaseToggleAbility {
 
         if (fleet == null) return;
         if (!isActive()) return;
+
+        if (ENABLE_PENALTIES) {
+            fleet.getStats().getDetectedRangeMod().modifyPercent(getModId(), ForgeSettings.SENSOR_PROFILE_INCREASE, "Forge production");
+            fleet.goSlowOneFrame();
+        }
 
         float days = Global.getSector().getClock().convertToDays(amount);
 
@@ -53,7 +60,7 @@ public class ForgeProduction extends BaseToggleAbility {
 
             ForgeAssemblingLogic.startAssembling(fleet);
 
-            if (goodsWereForged ()) {
+            if (goodsWereForged()) {
 
                 fleet.addFloatingText("Forged goods", Misc.setAlpha(Misc.getTextColor(), 255), 0.5f);
 
@@ -61,10 +68,10 @@ public class ForgeProduction extends BaseToggleAbility {
                     Global.getSoundPlayer().playSound("ui_cargo_raremetals", 1f, 1f, fleet.getLocation(), ZERO);
                 }
 
-                clearGoodsStatus ();
+                clearGoodsStatus();
             }
 
-            if (SHOW_NOTIFICATION && goodsProducedReport ()) {
+            if (SHOW_NOTIFICATION && goodsProducedReport()) {
                 notificationCounter += 1;
             }
 
@@ -82,7 +89,15 @@ public class ForgeProduction extends BaseToggleAbility {
 
     protected void deactivateImpl() { cleanupImpl(); }
 
-    protected void cleanupImpl() { }
+    @Override
+    protected void cleanupImpl() {
+        CampaignFleetAPI fleet = getFleet();
+        if (fleet == null) return;
+
+        if (ENABLE_PENALTIES) {
+            fleet.getStats().getDetectedRangeMod().unmodify(getModId());
+        }
+    }
 
     @Override
     public boolean isUsable() {
@@ -110,8 +125,8 @@ public class ForgeProduction extends BaseToggleAbility {
     @Override
     public void createTooltip(TooltipMakerAPI tooltip, boolean expanded) {
 
+        Color gray = Misc.getGrayColor();
         Color highlight = Misc.getHighlightColor();
-        Color negativeHighlight = Misc.getNegativeHighlightColor();
 
         String status = " (off)";
         if (turnedOn) {
@@ -122,13 +137,17 @@ public class ForgeProduction extends BaseToggleAbility {
         title.highlightLast(status);
         title.setHighlightColor(highlight);
 
-        tooltip.setLowGridRowHeight();
-
         float pad = 6f;
-        tooltip.addPara("Control forge production of your fleet.", pad);
-        tooltip.addPara("Your fleet must have ships with active forge modules to produce goods. " +
-                "Ships that are mothballed or do not receive repairs are unable to use their forge modules. " +
-                "Production also uses heavy machinery, which must be present but is not consumed, and can break accidentally.", pad);
+        tooltip.addPara("Control forge production of your fleet and monitor fleet forging capacity.", pad);
+        if (!expanded) {
+            tooltip.addPara("Your fleet must have ships with active forge modules to produce goods. " +
+                    "Ships that are mothballed or do not receive repairs are unable to use their forge modules. " +
+                    "Production also uses heavy machinery, which must be present but is not consumed, and can break accidentally.", pad);
+        }
+
+        if (!hasActiveForgeShips() && expanded) {
+            ForgeProductionTooltip.addCannotForgeNote(tooltip);
+        }
 
         if (hasActiveForgeShips() && expanded) {
             ForgeProductionTooltip.addOperationalShipsBreakdown(tooltip);
@@ -138,12 +157,19 @@ public class ForgeProduction extends BaseToggleAbility {
             ForgeProductionTooltip.addInactiveShipsBreakdown(tooltip);
         }
 
-        if (!hasActiveForgeShips()) {
-            tooltip.addPara("Your fleet currently cannot conduct forging operations.", negativeHighlight, pad);
-        }
-
         if (expanded) {
             ForgeProductionTooltip.addExpandedInfo(tooltip);
+        }
+
+        if (ENABLE_PENALTIES && !expanded) {
+            tooltip.addPara("Causes the fleet to %s and increases the range at which the fleet can be detected by %s.",
+                    pad, highlight, "move slowly", (int) ForgeSettings.SENSOR_PROFILE_INCREASE + "%");
+
+            tooltip.addPara("*A fleet is considered slow-moving at a burn level of half that of its slowest ship.", gray, pad);
+        }
+
+        if (!hasActiveForgeShips() && !expanded) {
+            ForgeProductionTooltip.addCannotForgeNote(tooltip);
         }
 
         addIncompatibleToTooltip(tooltip, expanded);

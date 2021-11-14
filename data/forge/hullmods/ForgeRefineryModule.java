@@ -7,7 +7,6 @@ import java.util.HashSet;
 import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.util.Misc;
@@ -79,15 +78,22 @@ public class ForgeRefineryModule extends BaseHullMod {
                     highlightColor, highlightColor, highlightColor, highlightColor
             };
 
-            String ore = String.valueOf(((int)(ForgeSettings.ORE_TO_REFINE) * getShipCapacityMod(ship,hullSize)));
-            String metal = String.valueOf(((int)(ForgeSettings.METAL_PRODUCED) * getShipCapacityMod(ship,hullSize)));
-            String transplutonicOre = String.valueOf(((int)(ForgeSettings.TRANSPLUTONIC_ORE_TO_REFINE) * getShipCapacityMod(ship,hullSize)));
-            String transplutonics = String.valueOf(((int)(ForgeSettings.TRANSPLUTONICS_PRODUCED) * getShipCapacityMod(ship,hullSize)));
+            String ore = String.valueOf((int)(ForgeSettings.ORE_TO_REFINE * getShipCapacityMod(ship,hullSize)));
+            String metal = String.valueOf((int)(ForgeSettings.METAL_PRODUCED * getShipCapacityMod(ship,hullSize)));
+            String transplutonicOre = String.valueOf((int)(ForgeSettings.TRANSPLUTONIC_ORE_TO_REFINE * getShipCapacityMod(ship,hullSize)));
+            String transplutonics = String.valueOf((int)(ForgeSettings.TRANSPLUTONICS_PRODUCED * getShipCapacityMod(ship,hullSize)));
 
             String firstLine = " • Refines %s metal from %s ore and %s transplutonics from %s transplutonic ore.";
+            String firstLineNoCapacity = " • Refines metal from ore and transplutonics from transplutonic ore.";
 
-            tooltip.addPara(firstLine, pad, firstLineHighlights,
-                    metal, ore, transplutonics, transplutonicOre);
+            if (getShipCapacityMod(ship,hullSize) >= 1) {
+                tooltip.addPara(firstLine, pad, firstLineHighlights,
+                        metal, ore, transplutonics, transplutonicOre);
+            }
+
+            if (getShipCapacityMod(ship,hullSize) < 1) {
+                tooltip.addPara(firstLineNoCapacity, pad);
+            }
 
             //Here: Second line
 
@@ -95,12 +101,18 @@ public class ForgeRefineryModule extends BaseHullMod {
                     highlightColor, highlightColor
             };
 
-            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_REFINING_USAGE) * getShipCapacityMod(ship,hullSize));
-            String breakdownChance = ((int)((float) ForgeSettings.BASE_BREAKDOWN_CHANCE * 100) + "%");
+            String heavyMachineryUsage = String.valueOf((int)(ForgeSettings.HEAVY_MACHINERY_REFINING_USAGE * getShipCapacityMod(ship,hullSize)));
+            String breakdownChance = ((int)(ForgeSettings.BASE_BREAKDOWN_CHANCE * 100) + "%");
 
             String secondLine = " • Uses %s heavy machinery, with %s chance of breakdown." ;
+            String secondLineNoCapacity = " • Uses heavy machinery, with %s chance of breakdown." ;
 
+            if (getShipCapacityMod(ship,hullSize) >= 1) {
             tooltip.addPara(secondLine, 2f, secondLineHighlights, heavyMachineryUsage, breakdownChance);
+            }
+            if (getShipCapacityMod(ship,hullSize) < 1) {
+                tooltip.addPara(secondLineNoCapacity, 2f, highlightColor, breakdownChance);
+            }
 
             //Here: Third line
 

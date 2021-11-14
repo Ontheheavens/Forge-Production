@@ -23,14 +23,19 @@ import static data.forge.campaign.ForgeConditionChecker.isOperational;
 
 public class ForgeProductionTooltip {
 
+    public static void addCannotForgeNote(TooltipMakerAPI tooltip) {
+        float pad = 6f;
+        Color negativeHighlight = Misc.getNegativeHighlightColor();
+        tooltip.addPara("Your fleet currently cannot conduct forging operations.", negativeHighlight, pad);
+    }
+
     public static void addOperationalShipsBreakdown(TooltipMakerAPI tooltip) {
         
         Color textColor = Misc.getTextColor();
         Color highlightColor = Misc.getHighlightColor();
-        Color positiveHighlightColor = Misc.getPositiveHighlightColor();
 
         String indent = "   ";
-        float pad = 6f;
+        float pad = 10f;
 
         tooltip.addSectionHeading("Operational ships", Alignment.MID, pad);
         tooltip.addSpacer(6f);
@@ -57,7 +62,7 @@ public class ForgeProductionTooltip {
 
             String label = indent + shipNameShort + ", " + shipClass;
 
-            tooltip.addToGrid(0, rowNumber++, label, forgeModule, positiveHighlightColor);
+            tooltip.addToGrid(0, rowNumber++, label, forgeModule, highlightColor);
 
             counter++;
 
@@ -81,7 +86,7 @@ public class ForgeProductionTooltip {
         Color highlightColor = Misc.getHighlightColor();
 
         String indent = "   ";
-        float pad = 6f;
+        float pad = 10f;
 
         tooltip.addSectionHeading("Inactive ships", Alignment.MID, pad);
         tooltip.addSpacer(6f);
@@ -131,7 +136,7 @@ public class ForgeProductionTooltip {
         }
 
         if (ForgeConditionChecker.hasAnySpecialItem()) {
-            addSpecialItemsBreakdown(tooltip);
+            ForgeProductionTooltip.addSpecialItemsBreakdown(tooltip);
         }
 
     }

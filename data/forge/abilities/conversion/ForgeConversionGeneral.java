@@ -28,7 +28,7 @@ public class ForgeConversionGeneral {
             if ((!ForgeConditionChecker.isOperational(member)))
                 continue;
             if (member.getVariant().hasHullMod(forgeType))
-                member.getRepairTracker().applyCREvent(-(((float) CR_PRODUCTION_DECAY * ForgeConditionChecker.getForgingQuality()) *
+                member.getRepairTracker().applyCREvent(-((CR_PRODUCTION_DECAY * ForgeConditionChecker.getForgingQuality()) *
                         (member.getRepairTracker().getCR() / 0.7f)), "Forged goods");
         }
     }

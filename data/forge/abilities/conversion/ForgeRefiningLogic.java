@@ -35,19 +35,19 @@ public class ForgeRefiningLogic {
 
         float oreInRefining = ForgeConditionChecker.getPlayerCargo(Commodities.ORE)/ ORE_TO_REFINE;
 
-        int refiningCycles = (int) (Math.min(refiningCapacity, Math.min(machineryAvailableForRefining, oreInRefining)));
+        int refiningCycles = (int) Math.floor(Math.min(refiningCapacity, Math.min(machineryAvailableForRefining, oreInRefining)));
 
         boolean willHeavyMachineryBreakdown = ForgeConditionChecker.getMachineryBreakdownChance();
         int MachineryInRefining = (int) Math.ceil((refiningCycles * HEAVY_MACHINERY_REFINING_USAGE));
         int machineryBroken = 0;
 
         for (int machineryInCheck = 0; machineryInCheck < MachineryInRefining; machineryInCheck++) {
-            if (Math.random()<((float) BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality())) machineryBroken++;
+            if (Math.random()<(BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality())) machineryBroken++;
         }
 
-        float dailyOreSpent = ORE_TO_REFINE * refiningCycles;
-        float dailyMetalProduced = (METAL_PRODUCED + ForgeConditionChecker.getCatalyticCoreBonus()) * refiningCycles;
-        float dailyHeavyMachineryBroken = machineryBroken;
+        int dailyOreSpent = (int) Math.ceil(ORE_TO_REFINE * refiningCycles);
+        int dailyMetalProduced = (int) Math.floor((METAL_PRODUCED + ForgeConditionChecker.getCatalyticCoreBonus()) * refiningCycles);
+        int dailyHeavyMachineryBroken = machineryBroken;
 
         fleet.getCargo().removeCommodity(Commodities.ORE, dailyOreSpent);
         fleet.getCargo().addCommodity(Commodities.METALS, dailyMetalProduced);
@@ -79,19 +79,19 @@ public class ForgeRefiningLogic {
 
         float transplutonicOreInRefining = ForgeConditionChecker.getPlayerCargo(Commodities.RARE_ORE) / TRANSPLUTONIC_ORE_TO_REFINE;
 
-        int refiningCycles = (int) (Math.min(refiningCapacity, Math.min(machineryAvailableForRefining, transplutonicOreInRefining)));
+        int refiningCycles = (int) Math.floor(Math.min(refiningCapacity, Math.min(machineryAvailableForRefining, transplutonicOreInRefining)));
 
         boolean willHeavyMachineryBreakdown = ForgeConditionChecker.getMachineryBreakdownChance();
         int machineryInRefining = (int) Math.ceil((refiningCycles * HEAVY_MACHINERY_REFINING_USAGE));
         int machineryBroken = 0;
 
         for (int machineryInCheck = 0; machineryInCheck < machineryInRefining; machineryInCheck++) {
-            if (Math.random()<((float) BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality())) machineryBroken++;
+            if (Math.random()<(BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality())) machineryBroken++;
         }
 
-        float dailyTransplutonicOreSpent = TRANSPLUTONIC_ORE_TO_REFINE * refiningCycles;
-        float dailyTransplutonicsProduced = (TRANSPLUTONICS_PRODUCED + ForgeConditionChecker.getCatalyticCoreBonus()) * refiningCycles;
-        float dailyHeavyMachineryBroken = machineryBroken;
+        int dailyTransplutonicOreSpent = (int) Math.ceil(TRANSPLUTONIC_ORE_TO_REFINE * refiningCycles);
+        int dailyTransplutonicsProduced = (int) Math.floor((TRANSPLUTONICS_PRODUCED + ForgeConditionChecker.getCatalyticCoreBonus()) * refiningCycles);
+        int dailyHeavyMachineryBroken = machineryBroken;
 
         fleet.getCargo().removeCommodity(Commodities.RARE_ORE, dailyTransplutonicOreSpent);
         fleet.getCargo().addCommodity(Commodities.RARE_METALS, dailyTransplutonicsProduced);

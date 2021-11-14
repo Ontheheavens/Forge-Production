@@ -34,7 +34,7 @@ public class ForgeManufacturingLogic {
         float metalInManufacturing = ForgeConditionChecker.getPlayerCargo(Commodities.METALS) / METAL_TO_MANUFACTURE;
         float transplutonicsInManufacturing = ForgeConditionChecker.getPlayerCargo(Commodities.RARE_METALS) / TRANSPLUTONICS_TO_MANUFACTURE;
 
-        int manufacturingCycles = (int) (Math.min(manufacturingCapacity,
+        int manufacturingCycles = (int) Math.floor(Math.min(manufacturingCapacity,
                 Math.min(machineryAvailableForManufacturing, Math.min(metalInManufacturing, transplutonicsInManufacturing))));
 
         boolean willHeavyMachineryBreakdown = ForgeConditionChecker.getMachineryBreakdownChance();
@@ -42,14 +42,14 @@ public class ForgeManufacturingLogic {
         int machineryBroken = 0;
 
         for (int machineryInCheck = 0; machineryInCheck < MachineryInManufacturing; machineryInCheck++) {
-            if (Math.random() < ((float) BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality()))
+            if (Math.random() < (BREAKDOWN_SEVERITY * ForgeConditionChecker.getForgingQuality()))
                 machineryBroken++;
         }
 
-        float dailyMetalSpent = METAL_TO_MANUFACTURE * manufacturingCycles;
-        float dailyTransplutonicsSpent = TRANSPLUTONICS_TO_MANUFACTURE * manufacturingCycles;
-        float dailySuppliesProduced = (SUPPLIES_PRODUCED + ForgeConditionChecker.getNanoforgeManufacturingBonus()) * manufacturingCycles;
-        float dailyHeavyMachineryBroken = machineryBroken;
+        int dailyMetalSpent = (int) Math.ceil(METAL_TO_MANUFACTURE * manufacturingCycles);
+        int dailyTransplutonicsSpent = (int) Math.ceil(TRANSPLUTONICS_TO_MANUFACTURE * manufacturingCycles);
+        int dailySuppliesProduced = (int) Math.floor((SUPPLIES_PRODUCED + ForgeConditionChecker.getNanoforgeManufacturingBonus()) * manufacturingCycles);
+        int dailyHeavyMachineryBroken = machineryBroken;
 
         fleet.getCargo().removeCommodity(Commodities.METALS, dailyMetalSpent);
         fleet.getCargo().removeCommodity(Commodities.RARE_METALS, dailyTransplutonicsSpent);

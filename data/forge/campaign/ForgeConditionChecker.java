@@ -1,5 +1,8 @@
 package data.forge.campaign;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CargoAPI;
@@ -13,18 +16,13 @@ import data.forge.abilities.conversion.ForgeTypes;
 import data.forge.hullmods.ForgeHullmodsGeneral;
 import data.forge.plugins.ForgeSettings;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import static data.forge.plugins.ForgeSettings.BASE_BREAKDOWN_CHANCE;
 import static data.forge.plugins.ForgeSettings.FUEL_PRODUCED;
 
 public class ForgeConditionChecker {
 
     public static boolean getMachineryBreakdownChance() {
-        return (Math.random()<((float) BASE_BREAKDOWN_CHANCE * ForgeConditionChecker.getForgingQuality()));
+        return (Math.random()<(BASE_BREAKDOWN_CHANCE * ForgeConditionChecker.getForgingQuality()));
     }
 
     public static boolean areFuelTanksFull(CampaignFleetAPI fleet) {
@@ -61,10 +59,10 @@ public class ForgeConditionChecker {
 
     public static float getForgingQuality() {
         if (hasSpecialItem(Items.PRISTINE_NANOFORGE)) {
-            return (float) ForgeSettings.PRISTINE_NANOFORGE_QUALITY_BONUS;
+            return ForgeSettings.PRISTINE_NANOFORGE_QUALITY_BONUS;
         }
         if (hasSpecialItem(Items.CORRUPTED_NANOFORGE)) {
-            return (float) ForgeSettings.CORRUPTED_NANOFORGE_QUALITY_BONUS;
+            return ForgeSettings.CORRUPTED_NANOFORGE_QUALITY_BONUS;
         }
         return 1f;
     }
@@ -85,20 +83,20 @@ public class ForgeConditionChecker {
 
     public static float getNanoforgeManufacturingBonus() {
         if (hasSpecialItem(Items.PRISTINE_NANOFORGE)) {
-            return (float) ForgeSettings.PRISTINE_NANOFORGE_MANUFACTURING_BONUS;
+            return ForgeSettings.PRISTINE_NANOFORGE_MANUFACTURING_BONUS;
         }
         if (hasSpecialItem(Items.CORRUPTED_NANOFORGE)) {
-            return (float) ForgeSettings.CORRUPTED_NANOFORGE_MANUFACTURING_BONUS;
+            return ForgeSettings.CORRUPTED_NANOFORGE_MANUFACTURING_BONUS;
         }
         return 0f;
     }
 
     public static float getNanoforgeAssemblingBonus() {
         if (hasSpecialItem(Items.PRISTINE_NANOFORGE)) {
-            return (float) ForgeSettings.PRISTINE_NANOFORGE_ASSEMBLING_BONUS;
+            return ForgeSettings.PRISTINE_NANOFORGE_ASSEMBLING_BONUS;
         }
         if (hasSpecialItem(Items.CORRUPTED_NANOFORGE)) {
-            return (float) ForgeSettings.CORRUPTED_NANOFORGE_ASSEMBLING_BONUS;
+            return ForgeSettings.CORRUPTED_NANOFORGE_ASSEMBLING_BONUS;
         }
         return 0f;
     }

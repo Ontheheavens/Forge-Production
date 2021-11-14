@@ -27,7 +27,7 @@ public class ForgeTooltipItems {
         int assemblingCapacity = (int) Math.ceil(getForgingCapacity(fleet, ASSEMBLING));
         String manufacturingBonus = Misc.getWithDGS((int) Math.ceil(CORRUPTED_NANOFORGE_MANUFACTURING_BONUS * manufacturingCapacity));
         String assemblingBonus = Misc.getWithDGS((int) Math.ceil(CORRUPTED_NANOFORGE_ASSEMBLING_BONUS * assemblingCapacity));
-        String qualityBonus = ((int)(100-((float) CORRUPTED_NANOFORGE_QUALITY_BONUS*100)) + "%");
+        String qualityBonus = ((int)(100-(CORRUPTED_NANOFORGE_QUALITY_BONUS*100)) + "%");
         String nanoforge = "Corrupted Nanoforge";
         String formatNoCapacity = "%s increases output of supplies, increases output of heavy machinery, and reduces " +
                 "breakdowns and CR loss by %s.";
@@ -65,7 +65,7 @@ public class ForgeTooltipItems {
         int assemblingCapacity = (int) Math.ceil(getForgingCapacity(fleet, ASSEMBLING));
         String manufacturingBonus = Misc.getWithDGS((int) Math.ceil(PRISTINE_NANOFORGE_MANUFACTURING_BONUS * manufacturingCapacity));
         String assemblingBonus = Misc.getWithDGS((int) Math.ceil(PRISTINE_NANOFORGE_ASSEMBLING_BONUS * assemblingCapacity));
-        String qualityBonus = ((int)(100-((float) PRISTINE_NANOFORGE_QUALITY_BONUS*100)) + "%");
+        String qualityBonus = ((int)(100-(PRISTINE_NANOFORGE_QUALITY_BONUS*100)) + "%");
         String nanoforge = "Pristine Nanoforge";
         String formatNoCapacity = "%s increases output of supplies, increases output of heavy machinery, and reduces " +
                 "breakdowns and CR loss by %s.";
