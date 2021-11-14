@@ -2,9 +2,9 @@
 	"id":"forge_production",
 	"name":"Forge Production",
 	"author":"Ontheheavens",
-	"version":"0.5.4",
+	"version":"1.0.1",
 	"description":"Hullmods that allow ships to produce commodities with ability toggle.",
-	"gameVersion":"0.95a",
+	"gameVersion":"0.95a-RC15",
 	"jars":["jars/forge_production.jar"],
 	"modPlugin":"data.forge.plugins.ForgeModPlugin",
 }
