@@ -1,0 +1,10 @@
+{
+    "knownHullMods":{
+        "hullMods":[
+            "forge_refinery_module",
+            "forge_centrifuge_module",
+            "forge_manufacture_module",
+            "forge_assembly_module"
+        ],
+    },
+},

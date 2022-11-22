@@ -1,0 +1,27 @@
+{
+    "designTypeColors": {
+
+	"Forge":[161, 152, 146, 255]
+
+	},
+
+    "graphics": {
+
+          "intel": {
+
+      "forge_production_report": "graphics/icons/intel/forge_production_report.png",
+
+        },
+
+          "hullmods": {
+
+      "ore_refinery_module": "graphics/hullmods/ore_refinery_module.png",
+      "fuel_centrifuge_module": "graphics/hullmods/fuel_centrifuge_module.png",
+      "supply_manufacture_module": "graphics/hullmods/supply_manufacture_module.png",
+      "machinery_assembly_module": "graphics/hullmods/machinery_assembly_module.png",
+
+        }
+
+    }
+
+}
