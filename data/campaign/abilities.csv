@@ -1,2 +1,0 @@
-name,id,type,tags,activationDays,activationCooldown,durationDays,deactivationDays,deactivationCooldown,unlockedAtStart,defaultForAIFleet,musicSuppression,uiOn,uiOff,uiLoop,worldOn,worldOff,worldLoop,icon,plugin,ai,desc,sortOrder
-"Forge Production",forge_production,TOGGLE,,0.5,,,0.25,1,TRUE,,,ui_neutrino_detector_on,ui_neutrino_detector_off,,system_temporalshell_off,,system_temporalshell_loop,graphics/icons/abilities/forge_production.png,data.forge.abilities.ForgeProduction,,"Control forge production of your fleet.",868
