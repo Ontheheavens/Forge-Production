@@ -1,0 +1,16 @@
+name,id,tier,rarity,tech/manufacturer,tags,uiTags,"base value",unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sprite
+"Makeshift Production Forge",forgprod_refining_module,,,"Domain Restricted","req_spaceport, special, no_build_in, no_drop, no_drop_salvage","Special, Requires Dock",120000,FALSE,FALSE,FALSE,20,20,20,40,forgprod.hullmods.RefiningModule,"This ship is outfitted with a jury-rigged version of Domain-era production autoforge, downscaled for installation on regular spaceship hulls.
+
+Increases the minimum crew required by %s and monthly maintenance supply cost by %s to account for production logistics. Unintended use of hull facilities decreases maximum combat readiness by %s.
+
+Can only be installed on cruiser or capital hulls.","Produces refined materials.",graphics/forgprod/hullmods/refining_module.png
+"Makeshift Production Forge",forgprod_fuel_production_module,,,"Domain Restricted","req_spaceport, special, no_build_in, no_drop, no_drop_salvage","Special, Requires Dock",140000,FALSE,FALSE,FALSE,20,20,20,40,forgprod.hullmods.FuelProductionModule,"This ship is outfitted with a jury-rigged version of Domain-era production autoforge, downscaled for installation on regular spaceship hulls.
+
+Increases the minimum crew required by %s and monthly maintenance supply cost by %s to account for production logistics. Unintended use of hull facilities decreases maximum combat readiness by %s.
+
+Can only be installed on cruiser or capital hulls.","Produces fuel.",graphics/forgprod/hullmods/fuel_production_module.png
+"Makeshift Production Forge",forgprod_heavy_industry_module,,,"Domain Restricted","req_spaceport, special, no_build_in, no_drop, no_drop_salvage","Special, Requires Dock",180000,FALSE,FALSE,FALSE,20,20,20,40,forgprod.hullmods.HeavyIndustryModule,"This ship is outfitted with a jury-rigged version of Domain-era production autoforge, downscaled for installation on regular spaceship hulls.
+
+Increases the minimum crew required by %s and monthly maintenance supply cost by %s to account for production logistics. Unintended use of hull facilities decreases maximum combat readiness by %s.
+
+Can only be installed on cruiser or capital hulls.","Produces industrial equipment.",graphics/forgprod/hullmods/heavy_industry_module.png

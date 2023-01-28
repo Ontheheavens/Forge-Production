@@ -1,0 +1,17 @@
+{
+
+	# UI sounds must be in stereo, enable/disable sounds are of this sort. Their methods don't have Vector2f location.
+
+	"forge_ability_enable":[
+		{"file":"sounds/forgprod/forge_ability_enable.ogg","pitch":1.0,"volume":1.0},
+	],
+	"forge_ability_disable":[
+		{"file":"sounds/forgprod/forge_ability_disable.ogg","pitch":1.0,"volume":1.0},
+	],
+
+	# This is a world sound, has mono channel and is played on fleet's location.
+
+	"forge_ability_loop":[
+		{"file":"sounds/forgprod/forge_ability_loop.ogg","pitch":1.0,"volume":1.0},
+	],
+}

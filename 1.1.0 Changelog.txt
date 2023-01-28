@@ -1,0 +1,31 @@
+Changes and additions:
+
+1. Re-designed and rewritten mod internals - this update is most certainly guaranteed to break your saves.
+
+2. Reshuffled and removed some superficial settings.
+
+3. Production report message icon no longer clickable and doesn't take you to intel tab anymore.
+
+4. Production now also has a chance to trigger fatal incidents which result in a loss of crew, similar to breakdowns.
+
+5. Redone pretty much every tooltip - hullmods, ability, report.
+
+6. Removed civgrade and cargo restrictions, replaced with CR malus.
+
+7. Added control panel, which allows for toggling of individual production capacities. No more setting repairs suspension!
+
+8. Added hull parts production capacity - can produce some derelict and low tech frigates at a steep cost, requires having Salvage Rigs.
+
+9. Added plausible way of obtaining hullmods - salvage from derelict Motherships. Hullmods are now unobtainable via normal drop or markets.
+
+10. Included interactive production values spreadsheet in release package - might be a help in making settings adjustments.
+
+Tracked issues:
+
+1. Mouseover events in nested scrollable areas glitch - fixed by Alex in next release.
+
+2. Ship icon perma-mods widget rendering glitch - fixed by Alex in next release.
+
+3. Unsatisfactory hull parts icon - work pending due to lack of artistic skill.
+
+4. Unsatisfactory sound effects qualtiy - work pending due to lack of sound design skill.

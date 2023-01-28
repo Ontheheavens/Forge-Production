@@ -1,0 +1,55 @@
+{
+
+    "graphics": {
+
+        "forgprod_intel": {
+
+    		"forge_production_report": "graphics/forgprod/icons/intel/forge_production_report.png",
+    		"forge_production_report_big": "graphics/forgprod/icons/intel/forge_production_report_big.png",
+
+        	},
+
+        "forgprod_hullmods": {
+
+		"forgprod_refining_module": "graphics/forgprod/hullmods/refining_module.png",
+		"forgprod_fuel_production_module": "graphics/forgprod/hullmods/fuel_production_module.png",
+		"forgprod_heavy_industry_module": "graphics/forgprod/hullmods/heavy_industry_module.png",
+
+		"forgprod_refining_module_big": "graphics/forgprod/hullmods/refining_module_big.png",
+		"forgprod_fuel_production_module_big": "graphics/forgprod/hullmods/fuel_production_module_big.png",
+		"forgprod_heavy_industry_module_big": "graphics/forgprod/hullmods/heavy_industry_module_big.png",
+
+		},
+
+        "forgprod_ui": {
+
+		"frame": "graphics/forgprod/ui/frame.png",
+		"frame_bright": "graphics/forgprod/ui/frame_bright.png",
+		"frame_small": "graphics/forgprod/ui/frame_small.png",
+
+		"effect_tooltip_anchor": "graphics/forgprod/ui/effect_tooltip_anchor.png",
+		"income_tooltip_anchor": "graphics/forgprod/ui/income_tooltip_anchor.png",
+		"cost_tooltip_anchor": "graphics/forgprod/ui/cost_tooltip_anchor.png",
+
+		"hull_parts_symbolic": "graphics/forgprod/icons/tooltip/hull_parts_symbolic.png",
+		"credits": "graphics/forgprod/icons/tooltip/credits.png",
+
+		"production_small": "graphics/forgprod/icons/tooltip/production_small.png",
+		"production_satisfied": "graphics/forgprod/icons/tooltip/production_satisfied.png",
+		"production_shortage": "graphics/forgprod/icons/tooltip/production_shortage.png",
+		"production_breakdowns": "graphics/forgprod/icons/tooltip/production_breakdowns.png",
+		"production_casualties": "graphics/forgprod/icons/tooltip/production_casualties.png",
+
+		"forge_production_illustration": "graphics/forgprod/icons/abilities/forge_production_big.png",
+
+        	},
+
+        "forgprod_cargo": {
+
+		"hull_parts": "graphics/forgprod/icons/cargo/hull_parts.png",
+
+        	}
+
+    	}
+
+}

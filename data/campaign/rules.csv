@@ -1,0 +1,35 @@
+id,trigger,conditions,script,text,options,notes
+"#Mothership special salvage interaction",,,,,,
+forgprod_salvage_start,PopulateSalvageOptions2,"$customType == derelict_mothership
+!$mothershipInvestigated
+!$hardwareRecovered",,"Exploration crews also report of several chambers left relatively intact deep within mothership hull, which may warrant further investigation.","20:forgprodInvestigate:Investigate the compartments",
+forgprod_salvage_recurrent,PopulateSalvageOptions2,"$customType == derelict_mothership
+$mothershipInvestigated
+!$hardwareRecovered",,,"20:forgprodConsiderRecovery:Consider recovery options",
+forgprod_salvage_consider,DialogOptionSelected,"$option == forgprodConsiderRecovery
+!$hardwareRecovered","ForgprodShowRetrievalCost
+FireBest ForgprodTryEquipmentCheck
+SetShortcut forgprodReconsider ESCAPE","It appears that sizable portions of the original autoforge compartment are still operational, rusted and worn out by time as they may be.
+
+Given necessary preparations, it might be possible to recover workable production modules as-is instead of scuttling them for machinery.","1:forgprodProceedRecovery:Commence recovery operation
+2:forgprodReconsider:Reconsider",
+forgprod_salvage_start_selected,DialogOptionSelected,"$option == forgprodInvestigate
+!$hardwareRecovered","ForgprodShowRetrievalCost
+FireBest ForgprodTryEquipmentCheck
+SetShortcut forgprodReconsider ESCAPE
+$mothershipInvestigated = true","Upon thorough examination of undamaged sections, exploration team's officer concludes that most of the hardware in sight is decayed beyond any practical hope of recovery.
+
+However, there's one important exception: it appears that sizable portions of the original autoforge compartment are still operational, rusted and worn out by time as they may be. Given necessary preparations, it might be possible to recover workable production modules as-is instead of scuttling them for machinery.","1:forgprodProceedRecovery:Commence recovery operation
+2:forgprodReconsider:Reconsider",
+forgprod_equipment_check,ForgprodTryEquipmentCheck,"!ForgprodCheckEquipment playerHasEquipment","SetTooltip forgprodProceedRecovery ""Commencing operation without sufficient equipment present would be a pointless endeavour.""
+SetEnabled forgprodProceedRecovery false",,,
+forgprod_proceed_recovery_selected,DialogOptionSelected,"$option == forgprodProceedRecovery",ForgprodOperationSuccessSFX,"After a rather lengthy wait, head of recovery operation reports back to the bridge. The operation can be considered a success: salvage crews were able to decouple autoforge installations and are now in the process of packaging the hardware. 
+
+Nevertheless, close examinations of forge machinery revealed that these modules are decidedly unsuitable for use without external facilities such as those native to the mothership's hull - at least, in their current form. Your chief engineer notes that the modules, arcane as they might be, can theoretically be disassembled and reassembled in a form more accomodating to whatever ship happened to be available - given, of course, inevitable size constraints and the fact that performance of makeshift versions is likely to be abysmally low.",0:forgprodRecoveryRewards:Continue,
+forgprod_recovery_rewards,DialogOptionSelected,"$option == forgprodRecoveryRewards","ForgprodAbilityUnlock
+ForgprodRecoveryRewards
+$hardwareRecovered = true",,0:forgprodRecoveryContinue:Continue,
+forgprod_recovery_continue_selected,DialogOptionSelected,"$option == forgprodRecoveryContinue","FireAll PopulateSalvageOptions2",,,
+forgprod_reconsider_selected,DialogOptionSelected,"$option == forgprodReconsider
+","FireAll PopulateSalvageOptions2",,,
+"#END Mothership special salvage interaction",,,,,,
